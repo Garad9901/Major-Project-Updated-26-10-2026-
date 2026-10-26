@@ -1,0 +1,1095 @@
+# Copyright (c) 2026 Yash Garad. All rights reserved.
+
+import logging
+import re
+from concurrent.futures import ThreadPoolExecutor
+
+from common import llm_metrics
+from common.exceptions import (
+    DatabaseUnavailable,
+    VectorStoreUnavailable,
+)
+from rag_agent.embedder import embed_text
+from rag_agent.service import retrieve
+from router_agent.classifier import classify
+from sql_agent.service import ask as sql_ask
+from synthesis_agent.service import synthesize_answer, synthesize_answer_stream
+from web_agent.service import fetch_for_question
+
+from fast_path import service as fast_path_service
+from sql_agent import db as sql_db, db_mssql as sql_db_mssql, guard as sql_guard
+
+from . import cache, concurrency, conversation, precompute, verification
+from .concurrency import llm_slot
+from .profiling import Profile
+
+logger = logging.getLogger("orchestrator")
+
+DEFAULT_ROUTE_ON_ERROR = "BOTH"
+RAG_TOP_K = 5
+
+# User-facing degradation notes appended to an answer when one source is down
+# but we could still answer from the other.
+DB_DOWN_NOTE = (
+    "Note: live records lookup is temporarily unavailable, so this answer is "
+    "based on descriptive information only."
+)
+RAG_DOWN_NOTE = (
+    "Note: descriptive search is temporarily unavailable, so this answer is "
+    "based on the structured records only."
+)
+WEB_EMPTY_NOTE = (
+    "Note: no official college page matching this question could be read, so "
+    "this answer comes from the records held in the database."
+)
+RAG_DOWN_SQL_FALLBACK_NOTE = (
+    "Note: descriptive search is temporarily unavailable; answering from the "
+    "structured records instead."
+)
+
+
+# ---------------------------------------------------------------------------
+# TWO STATES THAT LOOK ALIKE AND ARE NOT
+# ---------------------------------------------------------------------------
+# "the query ran and matched nothing"   -> a fact about the college
+# "the query could not run at all"      -> a fact about our infrastructure
+#
+# Only the first is something to tell a student about their college. Conflating
+# them produces the worst output this system can emit: a confident, specific
+# negative caused by a bug or an outage. During resilience testing, with
+# Postgres stopped, the model wrote
+#
+#     "The college records do not cover the total number of faculty holding
+#      the Lecturer rank"
+#
+# against a table holding 3,053 of them.
+#
+# THREE PROMPT-LEVEL ATTEMPTS FAILED TO STOP THIS, so the decision has been
+# taken away from the model. In the unavailable case the wording below is
+# returned from code and the model is either not called at all, or is called
+# only for the retrieval half and never gets to touch this text. There is no
+# instruction it can misread and no template it can prefer, because there is no
+# instruction — see _generate_stream.
+UNAVAILABLE_MESSAGE = (
+    "I couldn't retrieve that information right now due to a temporary system "
+    "issue. Please try again shortly."
+)
+
+
+class _UnavailableSql:
+    """Stands in for a SQL result when the database could not be reached.
+
+    Duck-types sql_agent.service.SqlAgentResult well enough for the consumers
+    that matter — synthesis_agent.untrusted.fence_sql_rows,
+    verification_agent.service._format_sql_section and orchestrator._sql_meta —
+    all of which branch on `.error` first.
+
+    `unavailable` is what the orchestrator branches on. It is a separate flag
+    rather than an isinstance check so the distinction survives anything that
+    passes a different object with the same shape, and so the intent is legible
+    at the call site: `if _sql_unavailable(x)` says what it means.
+
+    NOTE that this object is still handed to VERIFICATION, which does need the
+    distinction spelled out in prose — a verifier told "no rows" would confirm
+    a false negative as consistent with its evidence. That is why the wording in
+    untrusted.py stays even though synthesis no longer relies on it.
+    """
+
+    rows = None
+    columns = None
+    generated_sql = None
+    unavailable = True
+
+    def __init__(self, exc):
+        self.error = f"the records database was unreachable ({exc})"
+
+
+def _sql_unavailable(sql_result):
+    """True when the lookup could not RUN, as opposed to running and finding
+    nothing. `sql_result is None` (route needed no SQL) is not unavailability,
+    and neither is an empty `.rows`."""
+    return bool(getattr(sql_result, "unavailable", False))
+
+
+# Sentences asserting that the college holds no such record. Matched ONLY on the
+# degraded path, where such a statement is known to be false — the lookup did
+# not run, so nothing was established about what the records contain.
+_ABSENCE_CLAIM_RE = re.compile(
+    r"\b("
+    r"records?\s+(?:do|does)\s*n[o']t\s+cover"
+    r"|records?\s+(?:do|does)\s+not\s+cover"
+    r"|(?:do|does)\s*n[o']t\s+(?:cover|contain|include|have)\s+"
+    r"|(?:do|does)\s+not\s+(?:cover|contain|include|have)\s+"
+    r"|there\s+(?:are|is)\s+no\s+"
+    r"|no\s+(?:records?|data|information)\s+(?:on|about|for|of)\b"
+    r"|(?:is|are)\s+not\s+(?:available|present|recorded|listed)\b"
+    r"|(?:isn|aren)'t\s+(?:available|in\s+the\s+records)\b"
+    r")",
+    re.IGNORECASE,
+)
+
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
+
+# Words that point BACKWARDS at the sentence before them. When that sentence has
+# just been deleted they are left contrasting with nothing:
+#
+#     "However, for those departments that have data, the index averages 67.2."
+#
+# which reads as broken prose even though every remaining word is true. The
+# content was right and the seam was visible, which is its own kind of wrong —
+# an answer that looks damaged invites the reader to distrust the parts that are
+# correct.
+#
+# Longest first: "On the other hand" must be tried before "On", and "That said"
+# before "That". Python's alternation is first-match-wins, not longest-match.
+_DANGLING_CONNECTOR_RE = re.compile(
+    r"^("
+    r"On the other hand|On the contrary|That said|Having said that|Even so|"
+    r"By contrast|In contrast|By comparison|In addition|Additionally|"
+    r"Alternatively|Nevertheless|Nonetheless|Furthermore|Moreover|However|"
+    r"Meanwhile|Conversely|Instead|Although|Though|Whereas|Besides|"
+    r"But|Yet|Still|Also"
+    r")\b[\s,;:—–-]*",
+    re.IGNORECASE,
+)
+
+
+def _strip_false_absence(text):
+    """Remove sentences claiming the records hold nothing. Returns (text, dropped).
+
+    USED ONLY WHEN THE LOOKUP WAS UNAVAILABLE. On that path such a sentence is
+    false by construction: the query never ran, so nothing at all was learned
+    about what the records contain. Everywhere else these phrasings are correct
+    and wanted, which is why this is not a global filter.
+
+    CONSERVATIVE ON PURPOSE. A sentence is dropped only if it matches AND
+    carries no digit. Numbers on this path come from retrieved passages and are
+    the substance of the answer; a sentence like "63 Lecturers do not have a
+    recorded score" is a real finding from real data and must survive. Deleting
+    model prose is a blunt instrument, so it is aimed narrowly.
+
+    THE SEAM IS REPAIRED TOO. Removing a sentence can strand the connector that
+    followed it, so a sentence immediately after a deletion loses a leading
+    "However" / "But" / "That said" and is re-capitalised. This is position
+    aware: the same word is left alone anywhere else, because there it still has
+    the clause it refers back to.
+
+    If every sentence is dropped, the caller is left with the unavailability
+    note alone — which is the honest answer in that case anyway.
+    """
+    if not text:
+        return "", []
+
+    kept, dropped = [], []
+    previous_was_dropped = False
+
+    for sentence in _SENTENCE_SPLIT_RE.split(text.strip()):
+        sentence = sentence.strip()
+        if not sentence:
+            continue
+
+        if _ABSENCE_CLAIM_RE.search(sentence) and not re.search(r"\d", sentence):
+            dropped.append(sentence)
+            # Stays True across a run of deletions, so the connector is still
+            # stripped when two absence claims are removed back to back.
+            previous_was_dropped = True
+            continue
+
+        if previous_was_dropped:
+            sentence = _drop_leading_connector(sentence)
+            # An empty result means the sentence was ONLY a connector; skip it
+            # rather than emitting a stray fragment.
+            if not sentence:
+                continue
+        previous_was_dropped = False
+        kept.append(sentence)
+
+    return " ".join(kept), dropped
+
+
+def _drop_leading_connector(sentence):
+    """Remove a backwards-pointing connector left dangling by a deletion.
+
+    Re-capitalises what follows, because "however, For those departments" and
+    "for those departments" are both wrong in different ways. Only the first
+    character is touched, so an acronym or a name further along is untouched,
+    and a sentence starting with a digit is left exactly as it is.
+    """
+    match = _DANGLING_CONNECTOR_RE.match(sentence)
+    if not match:
+        return sentence
+
+    remainder = sentence[match.end():].lstrip()
+    # "However." on its own leaves "." once the connector goes. Anything with no
+    # letter or digit left in it is punctuation debris, not a sentence.
+    if not re.search(r"[^\W_]", remainder):
+        return ""
+    return remainder[0].upper() + remainder[1:]
+
+
+class Context:
+    """What the user was just talking about, resolved once per request.
+
+    Built in `prepare_context` before anything else runs, because three
+    different decisions depend on it and they must all see the same answer:
+    which route to take, what text to embed for retrieval, and what key to
+    cache under.
+
+    `asked` is what the user typed and is what gets shown back to them.
+    `question` is the resolved, standalone form and is what the pipeline runs
+    on. They are the same object for the overwhelming majority of questions.
+    """
+
+    __slots__ = ("asked", "question", "turns", "block", "resolved", "previous_route")
+
+    def __init__(self, asked, question=None, turns=(), block="", resolved=False,
+                 previous_route=None):
+        self.asked = asked
+        self.question = question or asked
+        self.turns = turns
+        self.block = block
+        self.resolved = resolved
+        self.previous_route = previous_route
+
+    @property
+    def is_followup(self):
+        return bool(self.turns)
+
+
+def prepare_context(question, history_turns=None, previous_route=None):
+    """Resolve a follow-up into a standalone question, once.
+
+    `history_turns` comes from the view, which is the only layer that knows
+    which conversation this belongs to. Passing it in rather than querying here
+    keeps the service free of the chat-history model and makes this callable
+    from tests and from the evaluation harness with no database at all.
+
+    Costs NOTHING for a self-contained question: `resolve` returns immediately
+    when the text does not look like a follow-up, so no history is formatted
+    and no LLM call is made. That is deliberate — see the latency note in
+    orchestrator/conversation.py.
+    """
+    if not history_turns:
+        return Context(question)
+
+    resolved_text, was_resolved = conversation.resolve(question, history_turns)
+    if not was_resolved:
+        # Not a follow-up, or the rewrite failed. Either way the pipeline runs
+        # on the original text and behaves exactly as it did before this
+        # feature existed.
+        return Context(question)
+
+    return Context(
+        asked=question,
+        question=resolved_text,
+        turns=history_turns,
+        block=conversation.as_prompt_block(history_turns),
+        resolved=True,
+        previous_route=previous_route,
+    )
+
+
+def _resolve_route(question, context=None):
+    # classify() can raise LLMUnavailable (Ollama down) — we let that propagate,
+    # since if the LLM is down synthesis can't run either. A *parse* failure
+    # (route_result.error) is different: fall back to BOTH and carry on.
+    context = context or Context(question)
+    route_result = classify(
+        question,
+        history_block=context.block,
+        previous_route=context.previous_route,
+    )
+    if route_result.error:
+        logger.warning(
+            "router failed question=%r error=%s — falling back to %s",
+            question, route_result.error, DEFAULT_ROUTE_ON_ERROR,
+        )
+        return DEFAULT_ROUTE_ON_ERROR, f"router error, defaulted to {DEFAULT_ROUTE_ON_ERROR}"
+    return route_result.route, route_result.reason
+
+
+def _run_sql(question, profile, history_block=""):
+    # Timed INSIDE the worker thread, not around pool.submit(), so the recorded
+    # interval is when the work actually ran rather than when it was queued.
+    # That distinction is the whole point when proving the two branches overlap.
+    with profile.stage("sql"):
+        return sql_ask(question, execute=True, history_block=history_block)
+
+
+def _run_rag(question, profile):
+    """`question` is the RESOLVED form, and that is load-bearing, not incidental.
+
+    Retrieval EMBEDS this text. Embedding "name them" produces a vector for a
+    two-word phrase with no subject, and the nearest neighbours of that are
+    whatever else in the index happens to be short and vague — the retrieved
+    passages would be unrelated to what the user is actually asking about.
+
+    This is the one place in the pipeline that history-as-prompt-context cannot
+    fix, because nothing here reads a prompt. The only lever is what text gets
+    embedded, which is why the resolution step in conversation.py exists rather
+    than simply passing a transcript to each agent.
+    """
+    with profile.stage("rag"):
+        return retrieve(question, top_k=RAG_TOP_K)
+
+
+def _gather_sources(question, route, profile=None, history_block=""):
+    """Fetch SQL and/or RAG data for the route, degrading gracefully when ONE
+    source is down. Returns (sql_result, rag_chunks, effective_route, notes,
+    web_pages).
+
+    An effective route of "NONE" means nothing usable came back and the caller
+    should answer with UNAVAILABLE_MESSAGE. VectorStoreUnavailable still
+    propagates from the RAG-only path, where a clean "descriptive search is
+    down" message is the better answer. LLMUnavailable from the embed/generate
+    steps propagates untouched — if the LLM is down, the whole request cannot be
+    served anyway.
+    """
+    needs_sql = route in ("SQL", "BOTH")
+    needs_rag = route in ("RAG", "BOTH")
+    sql_result = None
+    rag_chunks = None
+    notes = []
+    profile = profile or Profile()
+
+    if route == "WEB":
+        # The web agent NEVER raises for an unreachable page: it logs the
+        # failure and returns fewer pages. So an empty list here means "no
+        # allowlisted page matched, or none could be read", and the honest
+        # fallback is the database rather than an error.
+        with profile.stage("web_fetch"):
+            pages = fetch_for_question(question)
+        if pages:
+            return None, None, "WEB", notes, pages
+        logger.info("WEB route produced no pages; falling back to SQL for %r", question[:60])
+        notes.append(WEB_EMPTY_NOTE)
+        sql_result = _run_sql(question, profile, history_block)
+        return sql_result, None, "SQL", notes, []
+
+    if needs_sql and needs_rag:
+        # Independent I/O — run concurrently, but tolerate either one failing.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            f_sql = pool.submit(_run_sql, question, profile, history_block)
+            f_rag = pool.submit(_run_rag, question, profile)
+            try:
+                sql_result = f_sql.result()
+            except DatabaseUnavailable as exc:
+                logger.warning("SQL source down (route=BOTH), degrading to RAG-only: %s", exc)
+                notes.append(DB_DOWN_NOTE)
+                # Marked unavailable rather than left as None. None renders as
+                # "Database rows: none." to the verifier, which would then
+                # confirm a false negative as consistent with its evidence.
+                sql_result = _UnavailableSql(exc)
+            try:
+                rag_chunks = f_rag.result()
+            except VectorStoreUnavailable as exc:
+                logger.warning("RAG source down (route=BOTH), degrading to SQL-only: %s", exc)
+                notes.append(RAG_DOWN_NOTE)
+
+        # THE EFFECTIVE ROUTE IS WHAT ACTUALLY ANSWERED, not what was planned.
+        # It is written to the audit log, so labelling a question BOTH when the
+        # database was unreachable and only retrieval contributed makes the
+        # record wrong about how the answer was produced — which is precisely
+        # what an investigator reads it for. An unavailable SQL result is
+        # therefore not "SQL happened".
+        sql_answered = sql_result is not None and not _sql_unavailable(sql_result)
+        if sql_answered and rag_chunks is None:
+            effective = "SQL"
+        elif rag_chunks is not None and not sql_answered:
+            effective = "RAG"
+        elif not sql_answered and rag_chunks is None:
+            # Both sources gone. Not an exception: the caller turns this into
+            # the deterministic unavailability message, which is a better
+            # answer than a generic "service unavailable" error page.
+            effective = "NONE"
+        else:
+            effective = "BOTH"
+        return sql_result, rag_chunks, effective, notes, []
+
+    if needs_sql:
+        # SQL-only. A database outage here used to raise ServiceUnavailable and
+        # surface as a generic error. It now returns the unavailable marker so
+        # the caller answers with UNAVAILABLE_MESSAGE — same information, but
+        # phrased as something that happened rather than as a failure page, and
+        # crucially never routed through the model.
+        try:
+            sql_result = _run_sql(question, profile, history_block)
+        except DatabaseUnavailable as exc:
+            logger.warning("SQL source down (route=SQL): %s", exc)
+            notes.append(DB_DOWN_NOTE)
+            return _UnavailableSql(exc), None, "NONE", notes, []
+        return sql_result, None, "SQL", notes, []
+
+    # RAG-only
+    try:
+        rag_chunks = _run_rag(question, profile)
+    except VectorStoreUnavailable:
+        # Try SQL as a fallback; use it only if it actually found something.
+        logger.warning("RAG source down (route=RAG), attempting SQL fallback")
+        fallback = _run_sql(question, profile, history_block)
+        if fallback.rows:
+            notes.append(RAG_DOWN_SQL_FALLBACK_NOTE)
+            return fallback, None, "SQL", notes, []
+        raise  # nothing useful from SQL — surface the clean "descriptive search down" message
+    return None, rag_chunks, "RAG", notes, []
+
+
+def answer_question(question, context=None):
+    """Full pipeline, blocking. Returns a dict with the final answer plus
+    intermediate metadata. Degrades gracefully; raises ServiceUnavailable only
+    when nothing can be answered."""
+    # One slot for the whole pipeline. Raises AssistantBusy if the queue wait
+    # expires, which the API layer turns into a "busy, try again" message.
+    with llm_slot(label=f"blocking q={question[:40]!r}"):
+        context = context or Context(question)
+        question = context.question
+        route, reason = _resolve_route(question, context)
+        sql_result, rag_chunks, effective_route, notes, web_pages = _gather_sources(
+            question, route, history_block=context.block
+        )
+
+        # Same two branches as the streaming path, kept in step deliberately:
+        # a caller using the blocking variant must not get a model-authored
+        # description of an outage that the streaming variant refuses to
+        # produce. See _generate_stream for the reasoning.
+        if _sql_unavailable(sql_result) and not rag_chunks and not web_pages:
+            logger.warning(
+                "records lookup unavailable and no retrieval fallback for %r — "
+                "returning the fixed message without calling the model", question[:60],
+            )
+            return {
+                "question": question,
+                "route": effective_route,
+                "route_reason": reason,
+                "answer": UNAVAILABLE_MESSAGE,
+                "degraded": True,
+                "notes": notes,
+                "sql": _sql_meta(sql_result),
+                "rag": None,
+                "web": None,
+                "verification": {"verification": "not_applicable"},
+            }
+
+        prefix = ""
+        synthesis_sql = sql_result
+        if _sql_unavailable(sql_result) and rag_chunks:
+            prefix = UNAVAILABLE_MESSAGE + "\n\n"
+            synthesis_sql = None
+            notes = [n for n in notes if n != DB_DOWN_NOTE]
+
+        generated = synthesize_answer(
+            question, effective_route, sql_result=synthesis_sql, rag_chunks=rag_chunks,
+            web_pages=web_pages, history_block=context.block,
+        )
+        if prefix:
+            generated, dropped = _strip_false_absence(generated)
+            if dropped:
+                logger.warning(
+                    "removed %d absence claim(s) from a degraded answer for %r: %r",
+                    len(dropped), question[:60], dropped,
+                )
+        answer = prefix + generated
+        # Inside the slot: verification is more LLM work, so it must not run
+        # concurrently with someone else's answer.
+        answer, trailing, vmeta = verification.verify(
+            question, effective_route, answer,
+            sql_result=sql_result, rag_chunks=rag_chunks, web_pages=web_pages,
+        )
+    if trailing:
+        answer = answer + trailing
+    if notes:
+        answer = answer + "\n\n" + "\n".join(notes)
+
+    degraded = bool(notes) or bool(prefix)
+    logger.info("answered question=%r route=%s degraded=%s", question, effective_route, degraded)
+    return {
+        "question": question,
+        "route": effective_route,
+        "route_reason": reason,
+        "answer": answer,
+        "degraded": degraded,
+        "notes": notes,
+        "sql": _sql_meta(sql_result),
+        "rag": _rag_meta(rag_chunks),
+        "web": _web_meta(web_pages),
+        "verification": vmeta,
+    }
+
+
+def answer_question_stream(question, bypass_cache=False, context=None):
+    """Full pipeline, streaming. Yields ('meta', {...}), then ('token', str)
+    per piece, then ('done', {...}). Degradation notes (if any) are streamed
+    as trailing tokens so the user sees why the answer is limited. Raises
+    ServiceUnavailable when nothing can be answered, or AssistantBusy when no
+    LLM slot frees up in time — the API layer turns both into clean user-facing
+    messages.
+
+    NOTE ON SLOT LIFETIME: the slot is held across every `yield`, i.e. for as
+    long as the client is still reading the stream. That is intended — the model
+    is genuinely occupied for that whole period. The `finally` inside llm_slot()
+    releases it when this generator is closed, including when Django closes it
+    because the client disconnected mid-answer.
+    """
+    # REGENERATE MUST NOT BE ANSWERED FROM THE CACHE.
+    #
+    # Found while testing Prompt 27: an intermittently wrong answer ("There are
+    # 0 faculty members in the Medicine department" — the model had queried the
+    # 7-row staff directory instead of the 13,000-row survey) was stored by the
+    # semantic cache and then replayed to every subsequent user, identical every
+    # time, for the rest of the process lifetime. Verification could not catch
+    # it: the answer faithfully reported what its own (wrong) query returned.
+    #
+    # Regenerate is the one control a user has when an answer looks wrong. If it
+    # returned the same cached text it would be useless exactly when it matters,
+    # so it skips the lookup — and the fresh answer is still STORED, which
+    # overwrites the bad entry and repairs it for everyone else.
+    # Created out here rather than inside _generate_stream so the cache lookup
+    # — which embeds the question, an Ollama round trip — is measured as a
+    # stage instead of disappearing into unattributed overhead. It sits on the
+    # critical path to the first token for every question, hit or miss.
+    profile = Profile()
+
+    # RESOLVED ONCE, HERE, AND EVERYTHING DOWNSTREAM USES IT.
+    #
+    # The cache key, the route, the embedded retrieval text and every agent
+    # prompt must all agree on what the question actually means, or a follow-up
+    # is cached under one meaning and answered under another.
+    context = context or Context(question)
+    # THE CACHE IS KEYED ON THE RESOLVED FORM, NOT ON WHAT WAS TYPED.
+    #
+    # "name them" is not a question — it is a question shaped by whatever came
+    # before it. Keyed literally, two unrelated conversations that both end in
+    # "name them" collide, and the second user is served the first one's answer
+    # with complete confidence. The semantic cache makes that WORSE, not better:
+    # every bare follow-up embeds close to every other bare follow-up, because
+    # they share the little text they have.
+    #
+    # Keyed on "Name the 8 departments." the collision cannot happen: the key
+    # now carries the context that disambiguates it.
+    cache_key = context.question
+
+    # DETERMINISTIC FAST PATH — BEFORE THE SLOT *AND* BEFORE THE CACHE.
+    #
+    # Before the slot for the same reason the cache check is: with
+    # LLM_MAX_CONCURRENCY=1, anything inside llm_slot() serialises, and a
+    # question answered in 2ms would queue behind a 30-second generation.
+    #
+    # Before the CACHE because a cache lookup is not free — it embeds the
+    # question, which is a round trip to the embedding model. Measured, the
+    # whole fast path is 1.9ms median on Postgres and 5.1ms on SQL Server,
+    # which is cheaper than the lookup it skips.
+    #
+    # Returns None for anything it is not certain about, and that is most
+    # questions. See fast_path/service.py: a fast path that answers 95%
+    # correctly is worse than one that answers 60% and declines the rest,
+    # because the 5% arrive as confident wrong figures with no model and no
+    # verifier between them and the reader.
+    fast = _try_fast_path(question)
+    if fast is not None:
+        yield "meta", {
+            "question": question,
+            "route": "FAST",
+            "route_reason": f"deterministic lookup ({fast.intent})",
+            "degraded": False,
+            "cached": None,
+            # SAME SHAPE AS _sql_meta, NOT A BARE STRING.
+            #
+            # views.py does `(meta or {}).get("sql").get("generated_sql")` to
+            # write the audit row. A string here raised
+            # "'str' object has no attribute 'get'", the audit write failed, and
+            # the ANSWER STILL WENT OUT — so every fast-path answer was served
+            # with no audit record. That is an accountability control failing
+            # silently, which is worse than the latency it was buying.
+            "sql": {
+                "generated_sql": fast.sql,
+                "error": None,
+                "row_count": len(fast.rows),
+            },
+            "rag": None,
+        }
+        profile.mark("synthesis_first_token")
+        yield "token", fast.text
+        profile.log(question)
+        # cached="" not None: query_profile.cached is NOT NULL. Passing None
+        # raised IntegrityError inside the request, which under concurrency left
+        # the connection in an aborted transaction that the NEXT request
+        # inherited (CONN_MAX_AGE=60 keeps connections). 10 of 20 concurrent
+        # requests failed from this, none of them the one that caused it.
+        _store_profile(question, "FAST", profile, {}, cached="")
+        yield "done", {
+            "answer": fast.text,
+            # NOT "verification": "passed". Nothing was verified — the answer
+            # was computed by a hand-written parameterised query, so there is no
+            # model output to check. Saying "passed" would claim a check that
+            # never ran, which is the same class of untruth as the fixed refusal
+            # message containing a digit.
+            "verification": {"verification": "not_required", "reason": "deterministic lookup"},
+            "profile": profile.as_dict(),
+        }
+        return
+
+    # PRE-COMPUTED PROSE - after the fast path, before the cache.
+    #
+    # After the fast path because a count is cheaper than a lookup and never
+    # stale. Before the cache because a stored answer here was VERIFIED before
+    # it was stored and is deleted the instant its source rows change, whereas
+    # the cache is semantic and time-bounded; when both could answer, the one
+    # with the stronger guarantee should.
+    #
+    # Also before `regenerate`, for the same reason as the fast path: this is
+    # not a stored copy of a previous conversation's answer, it is the current
+    # verified answer for this question, regenerated whenever the data moves.
+    #
+    # A distinct route, not folded into "cached": these have to be measured
+    # separately to know whether pre-computation is earning its keep.
+    pre = _try_precomputed(question)
+    if pre is not None:
+        yield "meta", {
+            "question": question,
+            "route": "PRECOMPUTED",
+            "route_reason": f"pre-computed and verified ({pre.shape})",
+            "degraded": False,
+            "cached": None,
+            # Provenance exactly as the live answer carried it, so the UI shows
+            # sources for a pre-computed answer the same way.
+            "sql": (pre.sources or {}).get("sql"),
+            "rag": (pre.sources or {}).get("rag"),
+            "web": (pre.sources or {}).get("web"),
+            "precomputed": {
+                "generated_at": pre.generated_at.isoformat(),
+                "data_version": pre.data_version,
+                "generation_ms": pre.generation_ms,
+            },
+        }
+        profile.mark("synthesis_first_token")
+        yield "token", pre.answer
+        profile.log(question)
+        _store_profile(question, "PRECOMPUTED", profile, pre.verification or {}, cached="")
+        yield "done", {
+            "answer": pre.answer,
+            # The verification that RAN when this was generated, not a claim
+            # made now. It is what qualified the answer for storage.
+            "verification": dict(pre.verification or {}, precomputed=True),
+            "profile": profile.as_dict(),
+        }
+        return
+
+    # NOTE ON `regenerate`: the fast path runs BEFORE that check, deliberately.
+    # "Regenerate" means "do not serve me a stored answer". A deterministic
+    # lookup is not a stored answer — it is recomputed from the records on every
+    # request — so bypassing it would hand the user a slower answer to the same
+    # question with no benefit, and would have made the fast path invisible to
+    # exactly the load tests written to measure it.
+    if bypass_cache:
+        logger.info("cache bypassed (regenerate) for %r", question[:60])
+        yield from _generate_stream(question, profile, context)
+        return
+
+    # CACHE CHECK BEFORE THE SLOT, DELIBERATELY.
+    #
+    # Doing it inside llm_slot() would make every cached answer queue behind
+    # whoever is currently generating — with LLM_MAX_CONCURRENCY=1 and fifty
+    # simultaneous users, forty-nine of them would be told the assistant is busy
+    # and then be handed an answer that was sitting in memory the whole time.
+    # Out here, a hit costs no slot and blocks nobody.
+    with profile.stage("cache_lookup"):
+        hit = cache.lookup(cache_key, embed_text)
+
+    # COALESCE. A plain cache does nothing for simultaneous identical questions:
+    # they all look up before the first answer exists, and all miss. If someone
+    # is already generating this exact question, wait for their result rather
+    # than queuing for a second LLM slot to compute the same thing.
+    if hit is None:
+        if cache.begin(cache_key):
+            leader = True
+        else:
+            leader = False
+            with profile.stage("coalesce_wait"):
+                waited = cache.await_result(cache_key)
+            if waited and waited[0]:
+                hit = (waited[0], waited[1], "coalesced")
+            else:
+                # Leader failed or timed out — fall back to doing it ourselves.
+                leader = cache.begin(cache_key)
+    else:
+        leader = False
+
+    if hit is not None:
+        answer, cached_route, how = hit
+        yield "meta", {
+            "question": question,
+            "route": cached_route,
+            "route_reason": "served from cache",
+            "degraded": False,
+            "cached": how,
+            "sql": None,
+            "rag": None,
+        }
+        profile.mark("synthesis_first_token")
+        yield "token", answer
+        # Cache hits are recorded too. Leaving them out would make the
+        # percentiles describe only the slow path, and a p50 computed over
+        # misses alone is not the p50 a user experiences.
+        profile.log(question)
+        _store_profile(question, cached_route, profile, {}, cached=how)
+        yield "done", {
+            "answer": answer,
+            "verification": {"verification": "cached"},
+            "profile": profile.as_dict(),
+        }
+        return
+
+    try:
+        yield from _generate_stream(question, profile, context)
+    finally:
+        # Always release waiters, including on error or client disconnect.
+        # _generate_stream publishes the real result via cache.finish() on
+        # success; this is the safety net that stops followers hanging.
+        if leader:
+            cache.finish(cache_key)
+
+
+def _try_precomputed(question):
+    """A stored, verified answer, or None. Never raises - an optimisation on a
+    working system must cost latency, never an answer."""
+    try:
+        college_db = sql_db_mssql if sql_guard.DIALECT == "tsql" else sql_db
+        found = precompute.lookup(question, college_db.connection)
+        if found is not None:
+            # Observability only; a failed increment must not lose the answer.
+            try:
+                type(found).objects.filter(pk=found.pk).update(served_count=found.served_count + 1)
+            except Exception:
+                pass
+        return found
+    except Exception:
+        logger.exception("precomputed lookup raised - falling through")
+        return None
+
+
+def _try_fast_path(question):
+    """A deterministic answer, or None. Never raises.
+
+    Wrapped because the fast path is an OPTIMISATION on a working system: any
+    failure in it must cost latency, never an answer. A bug here should send the
+    question down the normal pipeline, not produce a 500.
+    """
+    try:
+        college_db = sql_db_mssql if sql_guard.DIALECT == "tsql" else sql_db
+        return fast_path_service.try_answer(question, college_db.connection)
+    except Exception:
+        logger.exception("fast path raised — falling through to the model")
+        return None
+
+
+def _generate_stream(question, profile=None, context=None):
+    """The real pipeline. Separated so the coalescing wrapper above stays
+    readable and so `finally` cleanup is unambiguous.
+
+    `profile` is passed in by the caller so its clock starts at the beginning of
+    the request rather than here — otherwise the cache lookup that precedes this
+    would be invisible, and every reported total would be short by that much.
+    """
+    profile = profile or Profile()
+    context = context or Context(question)
+    # THE PIPELINE RUNS ON THE RESOLVED QUESTION, not on what was typed.
+    #
+    # `asked` is kept for logging and for the audit record — the compliance
+    # trail must show what the user actually wrote, not a machine's paraphrase
+    # of it. Everything that reasons about the question uses the resolved form.
+    asked = context.asked
+    question = context.question
+    # Timed by bracketing the acquire rather than wrapping it in a stage(),
+    # because llm_slot is itself a context manager whose body is the entire
+    # pipeline — wrapping it would time the whole request and call it "waiting".
+    wait_started = profile.total_ms
+
+    # TELL THE USER WHERE THEY ARE BEFORE MAKING THEM WAIT.
+    #
+    # A 120-second wait against a blank screen is a hang. The same wait against
+    # "You're 2nd in line - about 90 seconds" is information, and it lets the
+    # person decide to give up rather than guess. This is what makes a longer
+    # LLM_QUEUE_TIMEOUT acceptable at all: the timeout was held at 25 s for as
+    # long as the wait was invisible.
+    #
+    # Position is exact under the admission bound (concurrency.queue_position),
+    # and the estimate is position-1 times the measured model-path p50 - the
+    # same figure the admission bound is sized from, so the two cannot
+    # disagree. Sent only when someone is actually ahead; position 1 waits for
+    # nothing and a "you're next" notice would just be noise.
+    position = concurrency.queue_position()
+    if position > 1:
+        p50 = concurrency.measured_model_p50_seconds() or concurrency._FALLBACK_P50_SECONDS
+        yield "stage", {
+            "stage": "queued",
+            "position": position,
+            "estimated_wait_seconds": int(round((position - 1) * p50)),
+            "queue_timeout_seconds": int(concurrency.QUEUE_TIMEOUT_SECONDS),
+        }
+
+    with llm_slot(label=f"stream q={question[:40]!r}"):
+        profile.add_stage("slot_wait", wait_started)
+        profile.mark("slot_acquired")
+        with profile.stage("router"):
+            route, reason = _resolve_route(question, context)
+
+        # Emitted BEFORE the data stages, which are the slow part. The SPA can
+        # say "looking up records" the moment routing is decided instead of
+        # showing nothing until the first synthesis token, which on this
+        # hardware is tens of seconds later. See views.py for the SSE event.
+        yield "stage", {"stage": "routing_done", "route": route, "reason": reason}
+
+        sql_result, rag_chunks, effective_route, notes, web_pages = _gather_sources(
+            question, route, profile, history_block=context.block
+        )
+
+        yield "meta", {
+            # What the user typed, so the SPA echoes their own words back.
+            "question": asked,
+            # Present only when the two differ, so the interface can show what
+            # a follow-up was understood to mean. Silence would be wrong: a
+            # user whose "name them" was misread has no way to see why the
+            # answer is about the wrong thing.
+            "resolved_question": question if context.resolved else None,
+            "route": effective_route,
+            "route_reason": reason,
+            "degraded": bool(notes),
+            "sql": _sql_meta(sql_result),
+            "rag": _rag_meta(rag_chunks),
+            "web": _web_meta(web_pages),
+        }
+        yield "stage", {"stage": "sources_ready", "route": effective_route}
+
+        # ------------------------------------------------------------------
+        # THE LOOKUP COULD NOT RUN, AND THERE IS NOTHING ELSE TO ANSWER FROM.
+        #
+        # No LLM call at all. The model is not asked, so it cannot decide to
+        # phrase this as "the college records do not cover X" — which is what
+        # it did, repeatedly, when it was asked. This is the whole point: the
+        # decision is removed rather than argued with.
+        # ------------------------------------------------------------------
+        if _sql_unavailable(sql_result) and not rag_chunks and not web_pages:
+            logger.warning(
+                "records lookup unavailable and no retrieval fallback for %r — "
+                "returning the fixed message without calling the model", question[:60],
+            )
+            profile.mark("synthesis_first_token")
+            yield "token", UNAVAILABLE_MESSAGE
+            profile.log(question)
+            _store_profile(question, effective_route, profile, {"verification": "skipped"})
+            yield "done", {
+                "answer": UNAVAILABLE_MESSAGE,
+                # Nothing was generated, so there is nothing to fact-check. Said
+                # explicitly rather than left absent, so this is not mistaken
+                # for a check that ran and passed.
+                "verification": {"verification": "not_applicable"},
+                "profile": profile.as_dict(),
+            }
+            return
+
+        # ------------------------------------------------------------------
+        # THE LOOKUP COULD NOT RUN, BUT RETRIEVAL DID.
+        #
+        # The note is emitted as literal text BEFORE synthesis starts, and the
+        # model is never shown it and never asked to produce it — so it cannot
+        # reword it, contradict it, or drop it. The model's only job is the
+        # retrieval half that follows, and it is handed no SQL section at all,
+        # so it has nothing to describe as absent.
+        # ------------------------------------------------------------------
+        pieces = []
+        degraded_prefix = _sql_unavailable(sql_result) and bool(rag_chunks)
+        if degraded_prefix:
+            prefix = UNAVAILABLE_MESSAGE + "\n\n"
+            pieces.append(prefix)
+            profile.mark("synthesis_first_token")
+            yield "token", prefix
+            # Withheld from synthesis on purpose: passing the unavailable
+            # marker would put "Database lookup FAILED" in the prompt and
+            # invite the model to write about it, which is the behaviour being
+            # removed. Verification still receives the real object below.
+            synthesis_sql = None
+            # The trailing note said the same thing in different words. Saying
+            # it twice — once leading, once trailing — reads as two separate
+            # problems rather than one, so the trailing copy goes.
+            notes = [n for n in notes if n != DB_DOWN_NOTE]
+        else:
+            synthesis_sql = sql_result
+
+        first_token_seen = degraded_prefix
+        synthesis_started = profile.total_ms
+        # Drained here so the streamed call's own timings are the only thing
+        # add_stage() picks up, not whatever the sources stage left behind.
+        llm_metrics.start()
+        stream = synthesize_answer_stream(
+            question, effective_route, sql_result=synthesis_sql, rag_chunks=rag_chunks,
+            web_pages=web_pages, history_block=context.block,
+        )
+
+        if degraded_prefix:
+            # BUFFERED, NOT STREAMED, AND ONLY ON THIS PATH.
+            #
+            # Withholding the SQL section was not enough on its own. Measured:
+            # handed no database data at all, the model still inferred absence
+            # from the question and wrote
+            #
+            #   "The college records do not cover the total number of faculty
+            #    holding the Lecturer rank across all departments."
+            #
+            # while the note directly above it said the lookup had failed. The
+            # model cannot be talked out of this — three prompt attempts — so
+            # the sentence is removed after the fact instead. That needs whole
+            # sentences, and sentences span streamed chunks, so this branch
+            # buffers.
+            #
+            # The cost is that these answers do not appear token by token. It
+            # is paid only during an outage, and only after the note has
+            # already been shown, so the user is not left watching nothing.
+            generated = "".join(stream)
+            cleaned, dropped = _strip_false_absence(generated)
+            if dropped:
+                logger.warning(
+                    "removed %d absence claim(s) from a degraded answer for %r: %r",
+                    len(dropped), question[:60], dropped,
+                )
+            if cleaned:
+                pieces.append(cleaned)
+                yield "token", cleaned
+        else:
+            for piece in stream:
+                if not first_token_seen:
+                    first_token_seen = True
+                    profile.mark("synthesis_first_token")
+                pieces.append(piece)
+                yield "token", piece
+        profile.add_stage("synthesis", synthesis_started)
+
+        # VERIFICATION runs only now, because it needs a COMPLETE answer.
+        #
+        # The user has already read the answer at this point, which is the
+        # deliberate trade-off: buffering it to verify first would add the full
+        # verification delay (~9.5s measured) BEFORE the first word appeared,
+        # and destroy streaming entirely. Instead the correction arrives a few
+        # seconds after the answer, and only when something was actually wrong.
+        streamed_answer = "".join(pieces)
+        yield "stage", {"stage": "verifying"}
+        with profile.stage("verification"):
+            _final, trailing, vmeta = verification.verify(
+                question, effective_route, streamed_answer,
+                sql_result=sql_result, rag_chunks=rag_chunks, web_pages=web_pages,
+            )
+        if trailing:
+            pieces.append(trailing)
+            yield "token", trailing
+
+        for note in notes:
+            note_text = "\n\n" + note
+            pieces.append(note_text)
+            yield "token", note_text
+
+        final_text = "".join(pieces)
+
+        # Cache only a clean, verified-or-unflagged answer. `degraded` covers the
+        # case where a source was down: that answer describes a temporary outage
+        # and must not be replayed once the source is back.
+        #
+        # `degraded_prefix` is part of this test and not merely `notes`. When the
+        # unavailability note is prepended, DB_DOWN_NOTE is removed from `notes`
+        # to avoid saying the same thing twice — which would have left `notes`
+        # empty and marked a degraded answer cacheable. An answer opening "I
+        # couldn't retrieve that information right now" would then have been
+        # replayed to everyone for the next half hour, including long after the
+        # database came back.
+        degraded = bool(notes) or degraded_prefix
+        cache.store(
+            question, final_text, effective_route, embed_text, degraded=degraded
+        )
+        # Hand the answer to anyone who coalesced behind this request. Done here
+        # rather than only in the wrapper's `finally` so waiters get the real
+        # text, not None.
+        if not degraded:
+            cache.finish(question, final_text, effective_route)
+
+        logger.info(
+            "streamed answer question=%r route=%s degraded=%s verification=%s",
+            question, effective_route, degraded, vmeta.get("verification"),
+        )
+        profile.log(question)
+        _store_profile(question, effective_route, profile, vmeta)
+        yield "done", {
+            "answer": final_text,
+            "verification": vmeta,
+            # Per-stage timings ride along on the done event so latency can be
+            # measured from a real client, not only read out of server logs.
+            "profile": profile.as_dict(),
+        }
+
+
+def _store_profile(question, route, profile, vmeta, cached=""):
+    """Persist one question's stage timings. Best-effort, like the audit write.
+
+    A profiler that can break an answer is worse than no profiler, so every
+    failure here is swallowed after logging. Imported inside the function
+    because this module is loaded before the app registry is ready.
+    """
+    try:
+        from .models import QueryProfile
+
+        totals = {"prompt_tokens": 0, "prompt_ms": 0.0, "gen_tokens": 0, "gen_ms": 0.0}
+        for stage in profile.stages:
+            llm = stage.get("llm") or {}
+            for key in totals:
+                value = llm.get(key)
+                if value is not None:
+                    totals[key] += value
+
+        first_token = next(
+            (s["start_ms"] for s in profile.stages if s["name"] == "synthesis_first_token"),
+            None,
+        )
+        QueryProfile.objects.create(
+            question=question,
+            route=route or "",
+            total_ms=profile.total_ms,
+            ttft_ms=first_token,
+            router_ms=profile.get("router"),
+            sql_ms=profile.get("sql"),
+            rag_ms=profile.get("rag"),
+            web_ms=profile.get("web_fetch"),
+            synthesis_ms=profile.get("synthesis"),
+            verification_ms=profile.get("verification"),
+            overhead_ms=profile.overhead_ms(),
+            prompt_tokens=totals["prompt_tokens"] or None,
+            prompt_ms=round(totals["prompt_ms"], 1) or None,
+            gen_tokens=totals["gen_tokens"] or None,
+            gen_ms=round(totals["gen_ms"], 1) or None,
+            verification_tier=(vmeta or {}).get("tier") or "",
+            cached=cached,
+            stages=profile.as_dict(),
+        )
+    except Exception:
+        logger.exception("could not store query profile for %r", question[:60])
+
+
+def _sql_meta(sql_result):
+    if sql_result is None:
+        return None
+    return {
+        "generated_sql": sql_result.generated_sql,
+        "error": sql_result.error,
+        "row_count": len(sql_result.rows) if sql_result.rows else 0,
+    }
+
+
+def _rag_meta(rag_chunks):
+    if not rag_chunks:
+        return None
+    return [
+        {"table": c.table, "row_id": c.row_id, "score": round(c.score, 4)}
+        for c in rag_chunks
+    ]
+
+
+def _web_meta(web_pages):
+    if not web_pages:
+        return None
+    return [p.to_dict() for p in web_pages]

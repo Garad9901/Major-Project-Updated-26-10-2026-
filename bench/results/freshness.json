@@ -1,0 +1,31 @@
+{
+ "question": "How many faculty in the Medicine department are from Deemed universities?",
+ "steps": [
+  {
+   "step": "baseline",
+   "n": 154,
+   "route": "FAST",
+   "ms": 32.46038699990095
+  },
+  {
+   "step": "repeat (cache?)",
+   "n": 154,
+   "route": "FAST",
+   "ms": 30.801332000010007
+  },
+  {
+   "step": "after external INSERT",
+   "n": 155,
+   "route": "FAST",
+   "ms": 30.889930999819626
+  },
+  {
+   "step": "after external DELETE",
+   "n": 154,
+   "route": "FAST",
+   "ms": 30.032826000024215
+  }
+ ],
+ "insert_reflected": true,
+ "delete_reflected": true
+}

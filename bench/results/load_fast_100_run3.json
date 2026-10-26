@@ -1,0 +1,2320 @@
+{
+ "summary": {
+  "label": "fast_100_run3",
+  "users": 100,
+  "distinct_accounts": 100,
+  "wall_ms": 1435,
+  "ok": 100,
+  "failed": 0,
+  "routes": {
+   "FAST": 100
+  },
+  "p50_ms": 840.4,
+  "p95_ms": 1291.6,
+  "max_ms": 1423.1,
+  "mean_ms": 779.2,
+  "throughput_rps": 69.7
+ },
+ "results": [
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 868.3596199998647,
+   "total_ms": 882.8308570000445,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1709
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 557.3781359998975,
+   "total_ms": 598.5419630001161,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1691
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1003.728750999926,
+   "total_ms": 1028.6970539996219,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1723
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 854.5426269997733,
+   "total_ms": 880.1520829997571,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1721
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 244.82307099970058,
+   "total_ms": 244.86488499996995,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1664
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 583.5376780000843,
+   "total_ms": 656.3290349999988,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1698
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1161.6180930000155,
+   "total_ms": 1223.250633999669,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1741
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1009.5016609998311,
+   "total_ms": 1051.5018070000224,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1745
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 182.7524440000161,
+   "total_ms": 182.82894200001465,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1665
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 673.1248740002229,
+   "total_ms": 724.9787910000123,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1707
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1409.2866779997166,
+   "total_ms": 1423.105048999787,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1761
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 182.35874999982116,
+   "total_ms": 229.96633099955943,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1674
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 556.3921680000021,
+   "total_ms": 603.9224159999321,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1688
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1059.720388000187,
+   "total_ms": 1083.1257230001938,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1746
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 435.79427399981796,
+   "total_ms": 445.2421940000022,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1680
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 241.84504200002266,
+   "total_ms": 291.1802069997975,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1673
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 509.6186759997181,
+   "total_ms": 511.9774159998087,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1682
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 470.548061000045,
+   "total_ms": 507.67025999994075,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1699
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1217.3352589998103,
+   "total_ms": 1247.1062169997822,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1750
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 928.6370140002873,
+   "total_ms": 959.395938000398,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1727
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 935.9368079999513,
+   "total_ms": 977.0103179998841,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1715
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 579.2469080001865,
+   "total_ms": 620.9792350000498,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1697
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 890.4013979999945,
+   "total_ms": 908.6404219997348,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1726
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 877.431794000131,
+   "total_ms": 896.481662000042,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1724
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 862.5449129999652,
+   "total_ms": 891.7083030000867,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1737
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 930.2770159997635,
+   "total_ms": 967.2306170000411,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1729
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1277.8041970000231,
+   "total_ms": 1291.1958479999157,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1762
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 853.5288879998006,
+   "total_ms": 885.860890999993,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1713
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 450.6629289999182,
+   "total_ms": 451.1087649998444,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1679
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1086.0129029997552,
+   "total_ms": 1120.1700299998265,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1742
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 413.8733519998823,
+   "total_ms": 427.8705209999316,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1684
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1229.556078999849,
+   "total_ms": 1241.8277579999994,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1759
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 473.9034070003072,
+   "total_ms": 527.9992750001838,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1693
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 947.5085330000184,
+   "total_ms": 964.3566310001006,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1730
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 551.9901909997316,
+   "total_ms": 592.6740049999353,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1704
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 257.67599199980395,
+   "total_ms": 257.73036400005367,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1672
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1225.8466859998407,
+   "total_ms": 1235.4794349998883,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1752
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 839.8940289998791,
+   "total_ms": 872.4713520000478,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1728
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 594.5773319999716,
+   "total_ms": 659.121007000067,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1702
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 288.39446099982524,
+   "total_ms": 302.9341429996748,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1675
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 201.1855679998007,
+   "total_ms": 201.89405099972646,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1671
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 482.13332500017714,
+   "total_ms": 524.0227680001226,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1696
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 878.576049000003,
+   "total_ms": 953.1915130000925,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1739
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 581.1402799999996,
+   "total_ms": 624.5279380000284,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1692
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 189.4425250002314,
+   "total_ms": 189.5324540000729,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1670
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 498.6720100000639,
+   "total_ms": 511.585548000312,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1686
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1314.834119000352,
+   "total_ms": 1328.9753020003445,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1763
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 940.0238159996661,
+   "total_ms": 974.663425000017,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1732
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 545.8561800001007,
+   "total_ms": 604.7219910001331,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1689
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1281.4196499998616,
+   "total_ms": 1299.567973000194,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1757
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 763.3640839999316,
+   "total_ms": 792.8622289996383,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1710
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 419.2413770001622,
+   "total_ms": 425.4953370000294,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1681
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 229.27902999981598,
+   "total_ms": 229.3226919996414,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1668
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 81.87440499978038,
+   "total_ms": 81.96428399969591,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1666
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 517.923023000094,
+   "total_ms": 517.978397999741,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1683
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 357.7102379999815,
+   "total_ms": 374.42091699995217,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1676
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1352.506180999626,
+   "total_ms": 1367.2757589997673,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1751
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 920.1216669998757,
+   "total_ms": 964.4292029997814,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1717
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 803.2755830004135,
+   "total_ms": 812.3217980000845,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1714
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 70.41014000014911,
+   "total_ms": 111.67113200008316,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1667
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 847.9960630002097,
+   "total_ms": 878.48375700014,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1725
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 364.29727700033254,
+   "total_ms": 376.7440340002395,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1678
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 922.0711929997378,
+   "total_ms": 949.3533919999209,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1731
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1150.5759929996202,
+   "total_ms": 1194.2561869996098,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1743
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 766.8363789998693,
+   "total_ms": 782.3900069997762,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1712
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 956.4242699998431,
+   "total_ms": 1001.9423220001045,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1736
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 877.305596000042,
+   "total_ms": 945.2195939998091,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1735
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1050.491449999754,
+   "total_ms": 1091.5265969997563,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1747
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 469.90399599962984,
+   "total_ms": 505.88697399962257,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1703
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1153.2749470002273,
+   "total_ms": 1173.382199000116,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1749
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1388.841427999978,
+   "total_ms": 1406.0873399998854,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1754
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 509.5684589996381,
+   "total_ms": 523.4094249999544,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1685
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1189.8070269999153,
+   "total_ms": 1214.2084500001147,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1748
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 935.2640900001461,
+   "total_ms": 981.6381480000018,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1733
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 514.181993999955,
+   "total_ms": 559.9920859999656,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1695
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 521.1717509996561,
+   "total_ms": 563.8863340000171,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1694
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1212.9330880002271,
+   "total_ms": 1231.328656000187,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1760
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 480.27910900009374,
+   "total_ms": 517.9968460001874,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1700
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1162.3710359999677,
+   "total_ms": 1183.69660999997,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1758
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 967.1179409997421,
+   "total_ms": 987.6141929998994,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1722
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 848.2685789999778,
+   "total_ms": 860.9345660001964,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1720
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1137.8363630001331,
+   "total_ms": 1162.7900780003984,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1755
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 818.0673000001661,
+   "total_ms": 831.3478640002359,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1719
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 921.9415170000502,
+   "total_ms": 981.2042499997915,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1740
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1021.8878349996885,
+   "total_ms": 1056.5500220000104,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1744
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 442.77275999957055,
+   "total_ms": 454.192602999683,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1687
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 551.4881710000736,
+   "total_ms": 594.7030489996905,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1690
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 290.68673099982334,
+   "total_ms": 302.85196900013034,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1677
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 644.8260560000563,
+   "total_ms": 676.366042999689,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1706
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 835.9453759999269,
+   "total_ms": 849.4435349998639,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1718
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1244.2011440002716,
+   "total_ms": 1259.5655099999021,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 1753
+  },
+  {
+   "question": "How many departments are there?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many departments are there?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (department_count)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.departments",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 639.0318700000535,
+   "total_ms": 672.3954529998082,
+   "answer": "The college has 8 departments.",
+   "error": null,
+   "conversation": 1711
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty hold the Lecturer rank?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 929.139288999977,
+   "total_ms": 958.447064000211,
+   "answer": "There are 3,053 faculty at the rank of Lecturer.",
+   "error": null,
+   "conversation": 1734
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average age of faculty?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_age)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(age AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 950.173962000008,
+   "total_ms": 991.392795000138,
+   "answer": "The average age across the college is 45.5.",
+   "error": null,
+   "conversation": 1738
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty have a High Development Need?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_development_need)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE target = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 183.99553599965657,
+   "total_ms": 184.048970999811,
+   "answer": "There are 1,291 faculty assessed as High Development Need.",
+   "error": null,
+   "conversation": 1669
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty in the Medicine department are from Deemed universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_filtered)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 885.1457480000136,
+   "total_ms": 892.2997009999563,
+   "answer": "There are 154 faculty in the Medicine department from Deemed universities.",
+   "error": null,
+   "conversation": 1716
+  },
+  {
+   "question": "What is the average AI tool adoption score for Professors?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average AI tool adoption score for Professors?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_ai_tool_adoption_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(ai_tool_adoption_score AS FLOAT)) AS a FROM public.faculty_development WHERE academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 1268.962773000112,
+   "total_ms": 1278.4701179998592,
+   "answer": "The average AI tool adoption score for faculty at the rank of Professor is 61.4.",
+   "error": null,
+   "conversation": 1756
+  },
+  {
+   "question": "How many Associate Professor faculty are in the Education department?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many Associate Professor faculty are in the Education department?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department_and_rank)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s AND academic_rank = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 521.886022000217,
+   "total_ms": 557.7636090001761,
+   "answer": "There are 393 Associate Professor faculty in the Education department.",
+   "error": null,
+   "conversation": 1701
+  },
+  {
+   "question": "How many faculty records come from Private universities?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty records come from Private universities?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_university_type)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE university_type = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 747.8484470002513,
+   "total_ms": 788.9137300003313,
+   "answer": "There are 5,101 faculty from Private universities.",
+   "error": null,
+   "conversation": 1708
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "What is the average teaching effectiveness score?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (average_teaching_effectiveness_score)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT AVG(CAST(teaching_effectiveness_score AS FLOAT)) AS a FROM public.faculty_development",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 680.1942329998383,
+   "total_ms": 740.35245999994,
+   "answer": "The average teaching effectiveness score across the college is 68.3.",
+   "error": null,
+   "conversation": 1705
+  }
+ ]
+}

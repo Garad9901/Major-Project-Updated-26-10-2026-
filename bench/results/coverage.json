@@ -1,0 +1,105 @@
+{
+  "source": "audit_log replay (restored backup 2026-09-07)",
+  "all_traffic": {
+    "distinct": 218,
+    "requests": 992,
+    "FAST": {
+      "distinct": 72,
+      "requests": 585,
+      "share_requests": 0.5897,
+      "share_distinct": 0.3303
+    },
+    "PRECOMPUTABLE": {
+      "distinct": 20,
+      "requests": 94,
+      "share_requests": 0.0948,
+      "share_distinct": 0.0917
+    },
+    "MODEL": {
+      "distinct": 126,
+      "requests": 313,
+      "share_requests": 0.3155,
+      "share_distinct": 0.578
+    },
+    "model_free_share_requests": 0.6845
+  },
+  "genuine_traffic": {
+    "distinct": 205,
+    "requests": 814,
+    "FAST": {
+      "distinct": 59,
+      "requests": 407,
+      "share_requests": 0.5,
+      "share_distinct": 0.2878
+    },
+    "PRECOMPUTABLE": {
+      "distinct": 20,
+      "requests": 94,
+      "share_requests": 0.1155,
+      "share_distinct": 0.0976
+    },
+    "MODEL": {
+      "distinct": 126,
+      "requests": 313,
+      "share_requests": 0.3845,
+      "share_distinct": 0.6146
+    },
+    "model_free_share_requests": 0.6155
+  },
+  "load_test_pool": {
+    "distinct": 13,
+    "requests": 178,
+    "FAST": {
+      "distinct": 13,
+      "requests": 178,
+      "share_requests": 1.0,
+      "share_distinct": 1.0
+    },
+    "PRECOMPUTABLE": {
+      "distinct": 0,
+      "requests": 0,
+      "share_requests": 0.0,
+      "share_distinct": 0.0
+    },
+    "MODEL": {
+      "distinct": 0,
+      "requests": 0,
+      "share_requests": 0.0,
+      "share_distinct": 0.0
+    },
+    "model_free_share_requests": 1.0
+  },
+  "intent_mix_genuine": {
+    "MODEL": 313,
+    "faculty_count_total": 5,
+    "faculty_count_by_department_and_competency": 27,
+    "faculty_count_by_department": 186,
+    "department_profile": 34,
+    "departments_strongest_digital": 11,
+    "faculty_count_by_department_and_rank": 21,
+    "average_teaching_effectiveness_score": 33,
+    "average_research_productivity_score": 2,
+    "average_data_literacy_score": 2,
+    "average_big_data_readiness_score": 2,
+    "average_ai_tool_adoption_score": 3,
+    "faculty_count_by_development_need": 15,
+    "faculty_count_by_competency": 32,
+    "average_research_publications": 13,
+    "faculty_count_by_rank": 33,
+    "department_count": 19,
+    "faculty_count_by_university_type": 13,
+    "rank_digital_readiness": 8,
+    "university_type_profile": 10,
+    "rank_research_output": 8,
+    "competency_overview": 8,
+    "lms_usage_meaning": 7,
+    "department_compare": 8,
+    "average_age": 1
+  },
+  "routing_decision_ms": {
+    "n": 218,
+    "p50": 0.13369399994189735,
+    "p95": 2.127295000036611,
+    "max": 19.70615599998382
+  }
+}

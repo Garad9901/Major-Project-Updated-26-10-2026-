@@ -1,0 +1,362 @@
+[
+ [
+  "how many profs are there",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Professor'"
+ ],
+ [
+  "no. of teachers in CS dept",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Computer Science'"
+ ],
+ [
+  "total facutly in medicine",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Medicine'"
+ ],
+ [
+  "how many lecturers do we have",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Lecturer'"
+ ],
+ [
+  "count of staff from private universities",
+  "SELECT COUNT(*) FROM faculty_development WHERE university_type='Private'"
+ ],
+ [
+  "avg age of faculty",
+  "SELECT ROUND(AVG(age)::numeric,1) FROM faculty_development"
+ ],
+ [
+  "how many female faculty",
+  "SELECT COUNT(*) FROM faculty_development WHERE gender='Female'"
+ ],
+ [
+  "number of experts",
+  "SELECT COUNT(*) FROM faculty_development WHERE competency_level='Expert'"
+ ],
+ [
+  "how many people need high development",
+  "SELECT COUNT(*) FROM faculty_development WHERE target='High Development Need'"
+ ],
+ [
+  "avg research publications in engineering",
+  "SELECT ROUND(AVG(research_publications)::numeric,1) FROM faculty_development WHERE department='Engineering'"
+ ],
+ [
+  "whats the average data literacy score for science dept",
+  "SELECT ROUND(AVG(data_literacy_score)::numeric,1) FROM faculty_development WHERE department='Science'"
+ ],
+ [
+  "how many faculty rarely use the lms",
+  "SELECT COUNT(*) FROM faculty_development WHERE lms_usage_frequency='Rare'"
+ ],
+ [
+  "mean teaching experience of associate profs",
+  "SELECT ROUND(AVG(teaching_experience_years)::numeric,1) FROM faculty_development WHERE academic_rank='Associate Professor'"
+ ],
+ [
+  "how many in deemed univs",
+  "SELECT COUNT(*) FROM faculty_development WHERE university_type='Deemed'"
+ ],
+ [
+  "avg student feedback score for lecturers",
+  "SELECT ROUND(AVG(student_feedback_score)::numeric,1) FROM faculty_development WHERE academic_rank='Lecturer'"
+ ],
+ [
+  "teachers in management department count",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Management'"
+ ],
+ [
+  "average ai tool adoption score in computer science",
+  "SELECT ROUND(AVG(ai_tool_adoption_score)::numeric,1) FROM faculty_development WHERE department='Computer Science'"
+ ],
+ [
+  "how many basic level faculty",
+  "SELECT COUNT(*) FROM faculty_development WHERE competency_level='Basic'"
+ ],
+ [
+  "avg overall development index for public universities",
+  "SELECT ROUND(AVG(overall_faculty_development_index)::numeric,1) FROM faculty_development WHERE university_type='Public'"
+ ],
+ [
+  "how many asst professors are there",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Assistant Professor'"
+ ],
+ [
+  "average no of training programs attended by male faculty",
+  "SELECT ROUND(AVG(training_programs_attended)::numeric,1) FROM faculty_development WHERE gender='Male'"
+ ],
+ [
+  "faculty count in arts and humanities",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Arts and Humanities'"
+ ],
+ [
+  "avg big data readiness for education dept",
+  "SELECT ROUND(AVG(big_data_readiness_score)::numeric,1) FROM faculty_development WHERE department='Education'"
+ ],
+ [
+  "how many use lms very frequently",
+  "SELECT COUNT(*) FROM faculty_development WHERE lms_usage_frequency='Very Frequent'"
+ ],
+ [
+  "average collaboration index of social science faculty",
+  "SELECT ROUND(AVG(collaboration_index)::numeric,1) FROM faculty_development WHERE department='Social Science'"
+ ],
+ [
+  "how many Associate Professors in Engineering",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Associate Professor' AND department='Engineering'"
+ ],
+ [
+  "Lecturers in private universities, how many?",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Lecturer' AND university_type='Private'"
+ ],
+ [
+  "count of female professors in medicine",
+  "SELECT COUNT(*) FROM faculty_development WHERE gender='Female' AND academic_rank='Professor' AND department='Medicine'"
+ ],
+ [
+  "expert level faculty in computer science count",
+  "SELECT COUNT(*) FROM faculty_development WHERE competency_level='Expert' AND department='Computer Science'"
+ ],
+ [
+  "avg research productivity of professors at public universities",
+  "SELECT ROUND(AVG(research_productivity_score)::numeric,1) FROM faculty_development WHERE academic_rank='Professor' AND university_type='Public'"
+ ],
+ [
+  "how many advanced competency teachers have high development need",
+  "SELECT COUNT(*) FROM faculty_development WHERE competency_level='Advanced' AND target='High Development Need'"
+ ],
+ [
+  "in deemed universities how many Assistant Professors are in the science dept",
+  "SELECT COUNT(*) FROM faculty_development WHERE university_type='Deemed' AND academic_rank='Assistant Professor' AND department='Science'"
+ ],
+ [
+  "average age of male lecturers",
+  "SELECT ROUND(AVG(age)::numeric,1) FROM faculty_development WHERE gender='Male' AND academic_rank='Lecturer'"
+ ],
+ [
+  "number of management faculty who use LMS rarely",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Management' AND lms_usage_frequency='Rare'"
+ ],
+ [
+  "avg teaching effectiveness for basic competency faculty in education",
+  "SELECT ROUND(AVG(teaching_effectiveness_score)::numeric,1) FROM faculty_development WHERE competency_level='Basic' AND department='Education'"
+ ],
+ [
+  "how many Professors with low development need",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Professor' AND target='Low Development Need'"
+ ],
+ [
+  "private univ CS faculty with intermediate competency - count",
+  "SELECT COUNT(*) FROM faculty_development WHERE university_type='Private' AND department='Computer Science' AND competency_level='Intermediate'"
+ ],
+ [
+  "mean publication quality index of experts in medicine",
+  "SELECT ROUND(AVG(publication_quality_index)::numeric,1) FROM faculty_development WHERE competency_level='Expert' AND department='Medicine'"
+ ],
+ [
+  "female Associate Professors at public universities how many",
+  "SELECT COUNT(*) FROM faculty_development WHERE gender='Female' AND academic_rank='Associate Professor' AND university_type='Public'"
+ ],
+ [
+  "avg digital tool usage score for arts and humanities lecturers",
+  "SELECT ROUND(AVG(digital_tool_usage_score)::numeric,1) FROM faculty_development WHERE department='Arts and Humanities' AND academic_rank='Lecturer'"
+ ],
+ [
+  "how many social science faculty have moderate development need",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Social Science' AND target='Moderate Development Need'"
+ ],
+ [
+  "engineering staff who use the lms frequently at deemed universities",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Engineering' AND lms_usage_frequency='Frequent' AND university_type='Deemed'"
+ ],
+ [
+  "average institutional support score for private university faculty in management",
+  "SELECT ROUND(AVG(institutional_support_score)::numeric,1) FROM faculty_development WHERE university_type='Private' AND department='Management'"
+ ],
+ [
+  "count assistant profs who are experts",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Assistant Professor' AND competency_level='Expert'"
+ ],
+ [
+  "avg research experience of male professors in engineering",
+  "SELECT ROUND(AVG(research_experience_years)::numeric,1) FROM faculty_development WHERE gender='Male' AND academic_rank='Professor' AND department='Engineering'"
+ ],
+ [
+  "how many Lecturers in medicine need high development",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank='Lecturer' AND department='Medicine' AND target='High Development Need'"
+ ],
+ [
+  "average innovation in teaching for female faculty in computer science",
+  "SELECT ROUND(AVG(innovation_in_teaching_score)::numeric,1) FROM faculty_development WHERE gender='Female' AND department='Computer Science'"
+ ],
+ [
+  "number of public university faculty with basic competency",
+  "SELECT COUNT(*) FROM faculty_development WHERE university_type='Public' AND competency_level='Basic'"
+ ],
+ [
+  "avg professional development score of occasional lms users in science",
+  "SELECT ROUND(AVG(professional_development_score)::numeric,1) FROM faculty_development WHERE lms_usage_frequency='Occasional' AND department='Science'"
+ ],
+ [
+  "how many education dept Associate Professors are at private universities",
+  "SELECT COUNT(*) FROM faculty_development WHERE department='Education' AND academic_rank='Associate Professor' AND university_type='Private'"
+ ],
+ [
+  "how many faculty are not professors",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank<>'Professor'"
+ ],
+ [
+  "count of faculty in all departments except engineering",
+  "SELECT COUNT(*) FROM faculty_development WHERE department<>'Engineering'"
+ ],
+ [
+  "how many teachers are either in CS or engineering",
+  "SELECT COUNT(*) FROM faculty_development WHERE department IN ('Computer Science','Engineering')"
+ ],
+ [
+  "total faculty in medicine and science combined",
+  "SELECT COUNT(*) FROM faculty_development WHERE department IN ('Medicine','Science')"
+ ],
+ [
+  "how many faculty are over 50",
+  "SELECT COUNT(*) FROM faculty_development WHERE age>50"
+ ],
+ [
+  "faculty with at least 5 publications",
+  "SELECT COUNT(*) FROM faculty_development WHERE research_publications>=5"
+ ],
+ [
+  "how many have more than 20 years teaching experience",
+  "SELECT COUNT(*) FROM faculty_development WHERE teaching_experience_years>20"
+ ],
+ [
+  "avg age of faculty aged between 30 and 40",
+  "SELECT ROUND(AVG(age)::numeric,1) FROM faculty_development WHERE age BETWEEN 30 AND 40"
+ ],
+ [
+  "what percent of faculty are female",
+  "SELECT ROUND(100.0*COUNT(*) FILTER (WHERE gender='Female')/COUNT(*),1) FROM faculty_development"
+ ],
+ [
+  "how many more faculty does engineering have than medicine",
+  "SELECT (SELECT COUNT(*) FROM faculty_development WHERE department='Engineering')-(SELECT COUNT(*) FROM faculty_development WHERE department='Medicine')"
+ ],
+ [
+  "how many faculty are in the largest department",
+  "SELECT MAX(n) FROM (SELECT COUNT(*) n FROM faculty_development GROUP BY department) s"
+ ],
+ [
+  "number of faculty other than lecturers at public universities",
+  "SELECT COUNT(*) FROM faculty_development WHERE academic_rank<>'Lecturer' AND university_type='Public'"
+ ],
+ [
+  "how many faculty with high or moderate development need",
+  "SELECT COUNT(*) FROM faculty_development WHERE target IN ('High Development Need','Moderate Development Need')"
+ ],
+ [
+  "avg data literacy excluding the arts and humanities dept",
+  "SELECT ROUND(AVG(data_literacy_score)::numeric,1) FROM faculty_development WHERE department<>'Arts and Humanities'"
+ ],
+ [
+  "how many faculty attended zero training programs",
+  "SELECT COUNT(*) FROM faculty_development WHERE training_programs_attended=0"
+ ],
+ [
+  "proportion of experts among professors, as a percentage",
+  "SELECT ROUND(100.0*COUNT(*) FILTER (WHERE competency_level='Expert')/COUNT(*),1) FROM faculty_development WHERE academic_rank='Professor'"
+ ],
+ [
+  "how many faculty under 35 in computer science",
+  "SELECT COUNT(*) FROM faculty_development WHERE age<35 AND department='Computer Science'"
+ ],
+ [
+  "faculty who are not experts and not advanced, how many",
+  "SELECT COUNT(*) FROM faculty_development WHERE competency_level NOT IN ('Expert','Advanced')"
+ ],
+ [
+  "how many men vs women difference (men minus women)",
+  "SELECT COUNT(*) FILTER (WHERE gender='Male')-COUNT(*) FILTER (WHERE gender='Female') FROM faculty_development"
+ ],
+ [
+  "how many faculty have an overall development index above 70",
+  "SELECT COUNT(*) FROM faculty_development WHERE overall_faculty_development_index>70"
+ ],
+ [
+  "what is the average salary of professors",
+  null
+ ],
+ [
+  "how many faculty were hired in 2020",
+  null
+ ],
+ [
+  "list the names of faculty in medicine",
+  null
+ ],
+ [
+  "which subjects does the CS department teach",
+  null
+ ],
+ [
+  "how many faculty have a PhD",
+  null
+ ],
+ [
+  "whats the email of the head of engineering",
+  null
+ ],
+ [
+  "how many faculty are on maternity leave",
+  null
+ ],
+ [
+  "average number of students per class in management",
+  null
+ ],
+ [
+  "how many faculty left the university last year",
+  null
+ ],
+ [
+  "which faculty live in nagpur",
+  null
+ ],
+ [
+  "hello",
+  null
+ ],
+ [
+  "hi there",
+  null
+ ],
+ [
+  "tell me about engineering",
+  null
+ ],
+ [
+  "thanks!",
+  null
+ ],
+ [
+  "what can you do",
+  null
+ ],
+ [
+  "good morning sir",
+  null
+ ],
+ [
+  "help",
+  null
+ ],
+ [
+  "whats the weather today",
+  null
+ ],
+ [
+  "tell me something interesting",
+  null
+ ],
+ [
+  "ok",
+  null
+ ]
+]

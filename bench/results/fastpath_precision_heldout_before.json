@@ -1,0 +1,734 @@
+{
+ "summary": {
+  "label": "heldout_before",
+  "cases": 90,
+  "answered": 17,
+  "correct": 8,
+  "wrong": 9,
+  "declined": 73,
+  "precision": 0.4706,
+  "silent_error_rate": 0.1
+ },
+ "cases": [
+  {
+   "question": "how many profs are there",
+   "truth": 1552.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "no. of teachers in CS dept",
+   "truth": 1916.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "total facutly in medicine",
+   "truth": 1046.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many lecturers do we have",
+   "truth": 3053.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "count of staff from private universities",
+   "truth": 5101.0,
+   "answer": 5101.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_university_type",
+   "text": "There are 5,101 faculty from Private universities."
+  },
+  {
+   "question": "avg age of faculty",
+   "truth": 45.5,
+   "answer": 45.5,
+   "outcome": "CORRECT",
+   "intent": "average_age",
+   "text": "The average age across the college is 45.5."
+  },
+  {
+   "question": "how many female faculty",
+   "truth": 6325.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "number of experts",
+   "truth": 730.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many people need high development",
+   "truth": 1291.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg research publications in engineering",
+   "truth": 7.0,
+   "answer": 7.0,
+   "outcome": "CORRECT",
+   "intent": "average_research_publications",
+   "text": "The average research publications per faculty member in the Engineering department is 7.0."
+  },
+  {
+   "question": "whats the average data literacy score for science dept",
+   "truth": 60.9,
+   "answer": 60.9,
+   "outcome": "CORRECT",
+   "intent": "average_data_literacy_score",
+   "text": "The average data literacy score in the Science department is 60.9."
+  },
+  {
+   "question": "how many faculty rarely use the lms",
+   "truth": 1717.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "mean teaching experience of associate profs",
+   "truth": 17.3,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many in deemed univs",
+   "truth": 1973.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg student feedback score for lecturers",
+   "truth": 70.0,
+   "answer": 70.0,
+   "outcome": "CORRECT",
+   "intent": "average_student_feedback_score",
+   "text": "The average student feedback score across the college is 70.0."
+  },
+  {
+   "question": "teachers in management department count",
+   "truth": 1784.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average ai tool adoption score in computer science",
+   "truth": 61.7,
+   "answer": 61.7,
+   "outcome": "CORRECT",
+   "intent": "average_ai_tool_adoption_score",
+   "text": "The average AI tool adoption score in the Computer Science department is 61.7."
+  },
+  {
+   "question": "how many basic level faculty",
+   "truth": 173.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg overall development index for public universities",
+   "truth": 67.3,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many asst professors are there",
+   "truth": 5057.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average no of training programs attended by male faculty",
+   "truth": 2.5,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "faculty count in arts and humanities",
+   "truth": 1501.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg big data readiness for education dept",
+   "truth": 66.7,
+   "answer": 66.7,
+   "outcome": "CORRECT",
+   "intent": "average_big_data_readiness_score",
+   "text": "The average big data readiness score in the Education department is 66.7."
+  },
+  {
+   "question": "how many use lms very frequently",
+   "truth": 2663.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average collaboration index of social science faculty",
+   "truth": 62.7,
+   "answer": 62.7,
+   "outcome": "CORRECT",
+   "intent": "average_collaboration_index",
+   "text": "The average collaboration index in the Social Science department is 62.7."
+  },
+  {
+   "question": "how many Associate Professors in Engineering",
+   "truth": 566.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "Lecturers in private universities, how many?",
+   "truth": 1191.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "count of female professors in medicine",
+   "truth": 71.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "expert level faculty in computer science count",
+   "truth": 134.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg research productivity of professors at public universities",
+   "truth": 71.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many advanced competency teachers have high development need",
+   "truth": 7.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "in deemed universities how many Assistant Professors are in the science dept",
+   "truth": 104.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average age of male lecturers",
+   "truth": 45.2,
+   "answer": 45.5,
+   "outcome": "WRONG",
+   "intent": "average_age",
+   "text": "The average age across the college is 45.5."
+  },
+  {
+   "question": "number of management faculty who use LMS rarely",
+   "truth": 211.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg teaching effectiveness for basic competency faculty in education",
+   "truth": 51.9,
+   "answer": 68.5,
+   "outcome": "WRONG",
+   "intent": "average_teaching_effectiveness_score",
+   "text": "The average teaching effectiveness score in the Education department is 68.5."
+  },
+  {
+   "question": "how many Professors with low development need",
+   "truth": 320.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "private univ CS faculty with intermediate competency - count",
+   "truth": 302.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "mean publication quality index of experts in medicine",
+   "truth": 75.3,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "female Associate Professors at public universities how many",
+   "truth": 731.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg digital tool usage score for arts and humanities lecturers",
+   "truth": 64.3,
+   "answer": 64.2,
+   "outcome": "WRONG",
+   "intent": "average_digital_tool_usage_score",
+   "text": "The average digital tool usage score in the Arts and Humanities department is 64.2."
+  },
+  {
+   "question": "how many social science faculty have moderate development need",
+   "truth": 828.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "engineering staff who use the lms frequently at deemed universities",
+   "truth": 126.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average institutional support score for private university faculty in management",
+   "truth": 64.3,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "count assistant profs who are experts",
+   "truth": 287.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg research experience of male professors in engineering",
+   "truth": 13.1,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many Lecturers in medicine need high development",
+   "truth": 24.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average innovation in teaching for female faculty in computer science",
+   "truth": 65.0,
+   "answer": 65.1,
+   "outcome": "WRONG",
+   "intent": "average_innovation_in_teaching_score",
+   "text": "The average innovation in teaching score in the Computer Science department is 65.1."
+  },
+  {
+   "question": "number of public university faculty with basic competency",
+   "truth": 77.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg professional development score of occasional lms users in science",
+   "truth": 66.9,
+   "answer": 66.7,
+   "outcome": "WRONG",
+   "intent": "average_professional_development_score",
+   "text": "The average professional development score in the Science department is 66.7."
+  },
+  {
+   "question": "how many education dept Associate Professors are at private universities",
+   "truth": 151.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty are not professors",
+   "truth": 11448.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "count of faculty in all departments except engineering",
+   "truth": 10927.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many teachers are either in CS or engineering",
+   "truth": 3989.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "total faculty in medicine and science combined",
+   "truth": 2849.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty are over 50",
+   "truth": 4825.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "faculty with at least 5 publications",
+   "truth": 8198.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many have more than 20 years teaching experience",
+   "truth": 5326.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "avg age of faculty aged between 30 and 40",
+   "truth": 35.1,
+   "answer": 45.5,
+   "outcome": "WRONG",
+   "intent": "average_age",
+   "text": "The average age across the college is 45.5."
+  },
+  {
+   "question": "what percent of faculty are female",
+   "truth": 48.7,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many more faculty does engineering have than medicine",
+   "truth": 1027.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty are in the largest department",
+   "truth": 2073.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "number of faculty other than lecturers at public universities",
+   "truth": 4515.0,
+   "answer": 5926.0,
+   "outcome": "WRONG",
+   "intent": "faculty_count_by_university_type",
+   "text": "There are 5,926 faculty from Public universities."
+  },
+  {
+   "question": "how many faculty with high or moderate development need",
+   "truth": 10276.0,
+   "answer": 8985.0,
+   "outcome": "WRONG",
+   "intent": "faculty_count_by_development_need",
+   "text": "There are 8,985 faculty assessed as Moderate Development Need."
+  },
+  {
+   "question": "avg data literacy excluding the arts and humanities dept",
+   "truth": 60.8,
+   "answer": 60.6,
+   "outcome": "WRONG",
+   "intent": "average_data_literacy_score",
+   "text": "The average data literacy score in the Arts and Humanities department is 60.6."
+  },
+  {
+   "question": "how many faculty attended zero training programs",
+   "truth": 1184.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "proportion of experts among professors, as a percentage",
+   "truth": 6.4,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty under 35 in computer science",
+   "truth": 405.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "faculty who are not experts and not advanced, how many",
+   "truth": 5290.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many men vs women difference (men minus women)",
+   "truth": 350.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty have an overall development index above 70",
+   "truth": 5078.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "what is the average salary of professors",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty were hired in 2020",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "list the names of faculty in medicine",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "which subjects does the CS department teach",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty have a PhD",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "whats the email of the head of engineering",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty are on maternity leave",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "average number of students per class in management",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "how many faculty left the university last year",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "which faculty live in nagpur",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "hello",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "hi there",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "tell me about engineering",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "thanks!",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "what can you do",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "good morning sir",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "help",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "whats the weather today",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "tell me something interesting",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "ok",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  }
+ ]
+}

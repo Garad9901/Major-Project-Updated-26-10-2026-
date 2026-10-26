@@ -1,0 +1,462 @@
+{
+ "summary": {
+  "label": "after",
+  "cases": 56,
+  "answered": 37,
+  "correct": 37,
+  "wrong": 0,
+  "declined": 19,
+  "precision": 1.0,
+  "silent_error_rate": 0.0
+ },
+ "cases": [
+  {
+   "question": "How many faculty are in the Engineering department?",
+   "truth": 2073.0,
+   "answer": 2073.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 2,073 faculty in the Engineering department."
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank?",
+   "truth": 3053.0,
+   "answer": 3053.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_rank",
+   "text": "There are 3,053 faculty at the rank of Lecturer."
+  },
+  {
+   "question": "How many faculty records come from Deemed universities?",
+   "truth": 1973.0,
+   "answer": 1973.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_university_type",
+   "text": "There are 1,973 faculty from Deemed universities."
+  },
+  {
+   "question": "How many faculty have a competency level of Expert?",
+   "truth": 730.0,
+   "answer": 730.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_competency",
+   "text": "There are 730 faculty at Expert competency level."
+  },
+  {
+   "question": "How many Assistant Professor faculty are in the Computer Science department?",
+   "truth": 735.0,
+   "answer": 735.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department_and_rank",
+   "text": "There are 735 Assistant Professor faculty in the Computer Science department."
+  },
+  {
+   "question": "How many faculty in the Science department have Basic competency?",
+   "truth": 20.0,
+   "answer": 20.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department_and_competency",
+   "text": "There are 20 faculty in the Science department at Basic competency level."
+  },
+  {
+   "question": "How many faculty have a High Development Need?",
+   "truth": 1291.0,
+   "answer": 1291.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_development_need",
+   "text": "There are 1,291 faculty assessed as High Development Need."
+  },
+  {
+   "question": "How many faculty use the LMS Very Frequent?",
+   "truth": 2663.0,
+   "answer": 2663.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_lms_usage",
+   "text": "There are 2,663 faculty whose LMS usage is recorded as Very Frequent."
+  },
+  {
+   "question": "How many faculty use the LMS Frequent?",
+   "truth": 4815.0,
+   "answer": 4815.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_lms_usage",
+   "text": "There are 4,815 faculty whose LMS usage is recorded as Frequent."
+  },
+  {
+   "question": "How many departments are there?",
+   "truth": 8.0,
+   "answer": 8.0,
+   "outcome": "CORRECT",
+   "intent": "department_count",
+   "text": "The college has 8 departments."
+  },
+  {
+   "question": "How many faculty are there?",
+   "truth": 13000.0,
+   "answer": 13000.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_total",
+   "text": "There are 13,000 faculty in the college records."
+  },
+  {
+   "question": "What is the average teaching effectiveness score?",
+   "truth": 68.3,
+   "answer": 68.3,
+   "outcome": "CORRECT",
+   "intent": "average_teaching_effectiveness_score",
+   "text": "The average teaching effectiveness score across the college is 68.3."
+  },
+  {
+   "question": "What is the average data literacy score in the Engineering department?",
+   "truth": 60.8,
+   "answer": 60.8,
+   "outcome": "CORRECT",
+   "intent": "average_data_literacy_score",
+   "text": "The average data literacy score in the Engineering department is 60.8."
+  },
+  {
+   "question": "What is the average age of faculty?",
+   "truth": 45.5,
+   "answer": 45.5,
+   "outcome": "CORRECT",
+   "intent": "average_age",
+   "text": "The average age across the college is 45.5."
+  },
+  {
+   "question": "How many faculty are in Medicine?",
+   "truth": 1046.0,
+   "answer": 1046.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 1,046 faculty in the Medicine department."
+  },
+  {
+   "question": "How many faculty are in Engineering?",
+   "truth": 2073.0,
+   "answer": 2073.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 2,073 faculty in the Engineering department."
+  },
+  {
+   "question": "What is the number of faculty in Medicine?",
+   "truth": 1046.0,
+   "answer": 1046.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 1,046 faculty in the Medicine department."
+  },
+  {
+   "question": "How Many Faculties are there",
+   "truth": 13000.0,
+   "answer": 13000.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_total",
+   "text": "There are 13,000 faculty in the college records."
+  },
+  {
+   "question": "How many faculties are there overall",
+   "truth": 13000.0,
+   "answer": 13000.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_total",
+   "text": "There are 13,000 faculty in the college records."
+  },
+  {
+   "question": "how many total faculties are there",
+   "truth": 13000.0,
+   "answer": 13000.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_total",
+   "text": "There are 13,000 faculty in the college records."
+  },
+  {
+   "question": "total no of faculty",
+   "truth": 13000.0,
+   "answer": 13000.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_total",
+   "text": "There are 13,000 faculty in the college records."
+  },
+  {
+   "question": "How many faculty members are in the Management department?",
+   "truth": 1784.0,
+   "answer": 1784.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 1,784 faculty in the Management department."
+  },
+  {
+   "question": "What is the overall average research productivity score across all faculty?",
+   "truth": 70.4,
+   "answer": 70.4,
+   "outcome": "CORRECT",
+   "intent": "average_research_productivity_score",
+   "text": "The average research productivity score across the college is 70.4."
+  },
+  {
+   "question": "What is the average publication quality index?",
+   "truth": 58.5,
+   "answer": 58.5,
+   "outcome": "CORRECT",
+   "intent": "average_publication_quality_index",
+   "text": "The average publication quality index across the college is 58.5."
+  },
+  {
+   "question": "How many faculty in the Engineering department have Expert competency and hold the Professor rank?",
+   "truth": 13.0,
+   "answer": 13.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 13 faculty in the Engineering department at the rank of Professor at Expert competency level."
+  },
+  {
+   "question": "How many faculty in the Engineering department hold the Professor rank at Private universities?",
+   "truth": 96.0,
+   "answer": 96.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 96 faculty in the Engineering department at the rank of Professor from Private universities."
+  },
+  {
+   "question": "How many faculty in the Medicine department are from Deemed universities?",
+   "truth": 154.0,
+   "answer": 154.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 154 faculty in the Medicine department from Deemed universities."
+  },
+  {
+   "question": "How many faculty hold the Lecturer rank in Public universities?",
+   "truth": 1411.0,
+   "answer": 1411.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 1,411 faculty at the rank of Lecturer from Public universities."
+  },
+  {
+   "question": "How many faculty have Expert competency in Private universities?",
+   "truth": 293.0,
+   "answer": 293.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 293 faculty at Expert competency level from Private universities."
+  },
+  {
+   "question": "How many faculty with a High Development Need are in the Education department?",
+   "truth": 152.0,
+   "answer": 152.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 152 faculty in the Education department assessed as High Development Need."
+  },
+  {
+   "question": "How many faculty are there in Engineering?",
+   "truth": 2073.0,
+   "answer": 2073.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_department",
+   "text": "There are 2,073 faculty in the Engineering department."
+  },
+  {
+   "question": "How many faculty are there at the Professor rank?",
+   "truth": 1552.0,
+   "answer": 1552.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_by_rank",
+   "text": "There are 1,552 faculty at the rank of Professor."
+  },
+  {
+   "question": "How many Professors in Computer Science have Expert competency level?",
+   "truth": 17.0,
+   "answer": 17.0,
+   "outcome": "CORRECT",
+   "intent": "faculty_count_filtered",
+   "text": "There are 17 faculty in the Computer Science department at the rank of Professor at Expert competency level."
+  },
+  {
+   "question": "How many female faculty are in the Engineering department?",
+   "truth": 973.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many male faculty hold the Professor rank?",
+   "truth": 738.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Engineering department are older than 50?",
+   "truth": 738.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Medicine department have more than 10 research publications?",
+   "truth": 273.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "What is the average age of Professors in Engineering?",
+   "truth": 44.6,
+   "answer": 44.6,
+   "outcome": "CORRECT",
+   "intent": "average_age",
+   "text": "The average age for faculty in the Engineering department at the rank of Professor is 44.6."
+  },
+  {
+   "question": "What is the average data literacy score of Lecturers?",
+   "truth": 60.5,
+   "answer": 60.5,
+   "outcome": "CORRECT",
+   "intent": "average_data_literacy_score",
+   "text": "The average data literacy score for faculty at the rank of Lecturer is 60.5."
+  },
+  {
+   "question": "What is the average teaching effectiveness in Deemed universities?",
+   "truth": 68.4,
+   "answer": 68.4,
+   "outcome": "CORRECT",
+   "intent": "average_teaching_effectiveness_score",
+   "text": "The average teaching effectiveness score for faculty from Deemed universities is 68.4."
+  },
+  {
+   "question": "What is the average student feedback score of Expert faculty in Medicine?",
+   "truth": 80.0,
+   "answer": 80.0,
+   "outcome": "CORRECT",
+   "intent": "average_student_feedback_score",
+   "text": "The average student feedback score for faculty in the Medicine department at Expert competency level is 80.0."
+  },
+  {
+   "question": "What is the average age of female faculty?",
+   "truth": 45.6,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Engineering department are not Professors?",
+   "truth": 1826.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty are not in the Engineering department?",
+   "truth": 10927.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty are in the Engineering or Medicine department?",
+   "truth": 3119.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty hold any rank except Lecturer?",
+   "truth": 9947.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty are outside the Science department?",
+   "truth": 11197.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty don't hold the Professor rank?",
+   "truth": 11448.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty have competency other than Basic?",
+   "truth": 12827.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty are in Engineering and Medicine departments combined?",
+   "truth": 3119.0,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "What is the average age excluding the Engineering department?",
+   "truth": 45.6,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "What is the average annual salary of faculty in the Engineering department?",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Engineering department joined in 2019?",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Robotics department?",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many senior faculty are in the Engineering department?",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  },
+  {
+   "question": "How many faculty in the Engineering department were promoted last year?",
+   "truth": null,
+   "answer": null,
+   "outcome": "DECLINED",
+   "intent": null,
+   "text": null
+  }
+ ]
+}

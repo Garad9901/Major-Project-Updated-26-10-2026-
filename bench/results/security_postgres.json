@@ -1,0 +1,152 @@
+{
+ "dialect": "postgres",
+ "attacks": {
+  "dml": {
+   "n": 6,
+   "rejected": 6,
+   "allowed": []
+  },
+  "ddl": {
+   "n": 6,
+   "rejected": 6,
+   "allowed": []
+  },
+  "stacked": {
+   "n": 4,
+   "rejected": 4,
+   "allowed": []
+  },
+  "comment_obfuscation": {
+   "n": 4,
+   "rejected": 4,
+   "allowed": []
+  },
+  "catalog_and_disallowed_tables": {
+   "n": 10,
+   "rejected": 10,
+   "allowed": []
+  },
+  "server_functions": {
+   "n": 8,
+   "rejected": 8,
+   "allowed": []
+  },
+  "remote_and_exec": {
+   "n": 8,
+   "rejected": 8,
+   "allowed": []
+  },
+  "file_io": {
+   "n": 3,
+   "rejected": 3,
+   "allowed": []
+  },
+  "session_and_locks": {
+   "n": 7,
+   "rejected": 7,
+   "allowed": []
+  },
+  "degenerate": {
+   "n": 8,
+   "rejected": 8,
+   "allowed": []
+  },
+  "_total": {
+   "n": 64,
+   "rejected": 64,
+   "rate": 1.0
+  }
+ },
+ "historical": {
+  "fast_path_statements_excluded": 53,
+  "statements_logged": 300,
+  "distinct": 104,
+  "guard_accepted": 104,
+  "guard_rejected": 0,
+  "executed_ok": 93,
+  "execution_errors": 11,
+  "rejected_examples": [],
+  "error_examples": [
+   [
+    "SELECT COUNT(*) AS associate_professor_count, AVG(university_type), AVG(institutional_support_score), AVG(institution_digital_infrastructure), AVG(digital_tool_usage_score), AVG(data_literacy_score), AVG(ai_tool_adoption_score) FROM faculty_development WHERE academic_rank = 'Associate Professor' AND loaded_at < '2023-01-01 17:59:59' LIMIT 50",
+    "UndefinedFunction",
+    "function avg(character varying) does not exist\nLINE 1: SELECT COUNT(*) AS associate_professor_count, AVG(university...\n                                         "
+   ],
+   [
+    "SELECT COUNT(*) AS associate_professor_count, AVG(university_type), AVG(institutional_support_score), AVG(institution_digital_infrastructure), AVG(digital_tool_usage_score), AVG(data_literacy_score), AVG(ai_tool_adoption_score) FROM faculty_development WHERE academic_rank = 'Associate Professor' AND loaded_at >= 1786008230 LIMIT 50",
+    "UndefinedFunction",
+    "function avg(character varying) does not exist\nLINE 1: SELECT COUNT(*) AS associate_professor_count, AVG(university...\n                                         "
+   ],
+   [
+    "SELECT COUNT(*) AS faculty_count, target AS development_needs FROM faculty_development WHERE department = 'Social Science' AND loaded_at < CAST('2023-01-01 12:00:00' AS TIMESTAMP) LIMIT 50",
+    "GroupingError",
+    "column \"faculty_development.target\" must appear in the GROUP BY clause or be used in an aggregate function\nLINE 1: SELECT COUNT(*) AS faculty_count, target AS d"
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty WHERE department = 'Engineering' AND competency_level = 'Expert' LIMIT 50",
+    "UndefinedColumn",
+    "column \"department\" does not exist\nLINE 1: SELECT COUNT(*) FROM faculty WHERE department = 'Engineering...\n                                           ^\nHINT:  P"
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty_development WHERE department = CAST('department' AS TEXT) AND department_id = 2 LIMIT 50",
+    "UndefinedColumn",
+    "column \"department_id\" does not exist\nLINE 1: ...WHERE department = CAST('department' AS TEXT) AND department...\n                                               "
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty_development WHERE department_id = 3 LIMIT 50",
+    "UndefinedColumn",
+    "column \"department_id\" does not exist\nLINE 1: SELECT COUNT(*) FROM faculty_development WHERE department_id...\n                                                  "
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty_development WHERE department_id = 6 LIMIT 50",
+    "UndefinedColumn",
+    "column \"department_id\" does not exist\nLINE 1: SELECT COUNT(*) FROM faculty_development WHERE department_id...\n                                                  "
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty_development WHERE department_id = 7 LIMIT 50",
+    "UndefinedColumn",
+    "column \"department_id\" does not exist\nLINE 1: SELECT COUNT(*) FROM faculty_development WHERE department_id...\n                                                  "
+   ],
+   [
+    "SELECT COUNT(*) FROM faculty_development WHERE department_id = 9 LIMIT 50",
+    "UndefinedColumn",
+    "column \"department_id\" does not exist\nLINE 1: SELECT COUNT(*) FROM faculty_development WHERE department_id...\n                                                  "
+   ],
+   [
+    "SELECT first_name, last_name FROM faculty WHERE faculty_id = (SELECT faculty_id FROM faculty_development ORDER BY research_publications DESC LIMIT 1) LIMIT 50",
+    "UndefinedColumn",
+    "column \"faculty_id\" does not exist\nLINE 1: SELECT first_name, last_name FROM faculty WHERE faculty_id =...\n                                                     "
+   ],
+   [
+    "SELECT first_name, last_name FROM faculty_development ORDER BY research_publications DESC LIMIT 1",
+    "UndefinedColumn",
+    "column \"first_name\" does not exist\nLINE 1: SELECT first_name, last_name FROM faculty_development ORDER ...\n               ^\n"
+   ]
+  ]
+ },
+ "bypass": {
+  "statements": 26,
+  "state_before": {
+   "courses": 8,
+   "departments": 8,
+   "rooms": 4,
+   "faculty_development": 13000,
+   "faculty": 11,
+   "_relations": 151
+  },
+  "state_after": {
+   "courses": 8,
+   "departments": 8,
+   "rooms": 4,
+   "faculty_development": 13000,
+   "faculty": 11,
+   "_relations": 151
+  },
+  "state_unchanged": true,
+  "statements_without_error": [
+   "RESET ROLE",
+   "SET default_transaction_read_only = off",
+   "PREPARE p AS DELETE FROM courses"
+  ]
+ }
+}

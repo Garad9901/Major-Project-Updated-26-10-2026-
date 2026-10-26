@@ -1,0 +1,60 @@
+# Copyright (c) 2026 Yash Garad. All rights reserved.
+
+# env — every environment file is ignored EXCEPT the committed example.
+# The broad .env* pattern is deliberate: it means a future .env.staging or
+# .env.backup is ignored by default rather than only after someone remembers to
+# add it. The negation for .env.example must come after the pattern that
+# excludes it, or git will not re-include it.
+.env
+.env.*
+!.env.example
+
+# Backups and copies of environment files, which is how secrets usually escape.
+*.env.bak
+.env.production.new
+
+# python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# node
+node_modules/
+dist/
+
+# docker volumes (bind-mounted data, if any)
+postgres_data/
+qdrant_data/
+ollama_data/
+
+# sync_worker runtime state (watermarks + change queue log)
+sync_worker/data/
+
+# experiment output (regenerated CSV/JSONL research results)
+backend/experiment_results/
+
+# database + vector backups (contain real student data; never commit)
+backups/
+*.dump
+*.snapshot
+
+# editor
+.vscode/
+.idea/
+
+# The institution config a college fills in. The .example.json is committed;
+# the real one holds their name, colours and URL allowlist and must not be
+# overwritten by an upgrade or captured in a commit.
+config/institution.json
+config/institution.json.bak
+
+# Per-deployment institution branding (logo, crest, any customer asset).
+# The customer's trademark is not part of the product. config/institution.json
+# is already excluded for the same reason: branding travels with the
+# deployment, not with the repository. config/institution.example.json and
+# config/schema_map.json ARE committed and are negated below.
+config/institution/
+
+# Paper drafts (kept local)
+paper/

@@ -1,0 +1,43 @@
+{
+ "summary": {
+  "label": "fast_1",
+  "users": 1,
+  "distinct_accounts": 1,
+  "wall_ms": 20,
+  "ok": 1,
+  "failed": 0,
+  "routes": {
+   "FAST": 1
+  },
+  "p50_ms": 19.6,
+  "p95_ms": 19.6,
+  "max_ms": 19.6,
+  "mean_ms": 19.6,
+  "throughput_rps": 50.4
+ },
+ "results": [
+  {
+   "question": "How many faculty are in Medicine?",
+   "status": 200,
+   "route": "FAST",
+   "meta": {
+    "question": "How many faculty are in Medicine?",
+    "route": "FAST",
+    "route_reason": "deterministic lookup (faculty_count_by_department)",
+    "degraded": false,
+    "cached": null,
+    "sql": {
+     "generated_sql": "SELECT COUNT(*) AS n FROM public.faculty_development WHERE department = %s",
+     "error": null,
+     "row_count": 1
+    },
+    "rag": null
+   },
+   "ttft_ms": 16.429758000185757,
+   "total_ms": 19.559887000013987,
+   "answer": "There are 1,046 faculty in the Medicine department.",
+   "error": null,
+   "conversation": 944
+  }
+ ]
+}

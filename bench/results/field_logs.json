@@ -1,0 +1,289 @@
+{
+ "window": {
+  "first": "2026-07-26",
+  "last": "2026-09-07",
+  "requests": 992
+ },
+ "audit_by_route": [
+  {
+   "route": "SQL",
+   "n": 470,
+   "p50": "33863",
+   "p95": "145201",
+   "mean": "52255"
+  },
+  {
+   "route": "(none)",
+   "n": 363,
+   "p50": "25207",
+   "p95": "240391",
+   "mean": "82697"
+  },
+  {
+   "route": "RAG",
+   "n": 79,
+   "p50": "102978",
+   "p95": "405914",
+   "mean": "134660"
+  },
+  {
+   "route": "FAST",
+   "n": 53,
+   "p50": "42",
+   "p95": "63",
+   "mean": "45"
+  },
+  {
+   "route": "BOTH",
+   "n": 19,
+   "p50": "150252",
+   "p95": "250137",
+   "mean": "150088"
+  },
+  {
+   "route": "WEB",
+   "n": 8,
+   "p50": "57165",
+   "p95": "97376",
+   "mean": "61056"
+  }
+ ],
+ "injection_flagged": {
+  "n": 18
+ },
+ "profile_by_route": [
+  {
+   "route": "SQL",
+   "cached": "",
+   "n": 210,
+   "p50": "36632",
+   "p95": "128330",
+   "mean": "54134"
+  },
+  {
+   "route": "FAST",
+   "cached": "",
+   "n": 53,
+   "p50": "2",
+   "p95": "18",
+   "mean": "8"
+  },
+  {
+   "route": "SQL",
+   "cached": "exact",
+   "n": 35,
+   "p50": "1",
+   "p95": "14",
+   "mean": "3"
+  },
+  {
+   "route": "RAG",
+   "cached": "",
+   "n": 29,
+   "p50": "78875",
+   "p95": "179433",
+   "mean": "90852"
+  },
+  {
+   "route": "SQL",
+   "cached": "coalesced",
+   "n": 19,
+   "p50": "39080",
+   "p95": "116723",
+   "mean": "48310"
+  },
+  {
+   "route": "BOTH",
+   "cached": "",
+   "n": 9,
+   "p50": "100549",
+   "p95": "201384",
+   "mean": "105387"
+  },
+  {
+   "route": "RAG",
+   "cached": "exact",
+   "n": 3,
+   "p50": "1",
+   "p95": "43",
+   "mean": "17"
+  },
+  {
+   "route": "WEB",
+   "cached": "",
+   "n": 2,
+   "p50": "48817",
+   "p95": "51546",
+   "mean": "48817"
+  },
+  {
+   "route": "RAG",
+   "cached": "coalesced",
+   "n": 1,
+   "p50": "231934",
+   "p95": "231934",
+   "mean": "231934"
+  },
+  {
+   "route": "BOTH",
+   "cached": "coalesced",
+   "n": 1,
+   "p50": "223935",
+   "p95": "223935",
+   "mean": "223935"
+  }
+ ],
+ "profile_stage_means_uncached": [
+  {
+   "route": "SQL",
+   "n": 210,
+   "router": "647",
+   "sql": "8737",
+   "rag": null,
+   "synthesis": "18352",
+   "verification": "4676",
+   "ttft": "46924",
+   "total": "54134"
+  },
+  {
+   "route": "FAST",
+   "n": 53,
+   "router": null,
+   "sql": null,
+   "rag": null,
+   "synthesis": null,
+   "verification": null,
+   "ttft": "7",
+   "total": "8"
+  },
+  {
+   "route": "RAG",
+   "n": 29,
+   "router": "3212",
+   "sql": null,
+   "rag": "307",
+   "synthesis": "66499",
+   "verification": "19096",
+   "ttft": "60285",
+   "total": "90852"
+  },
+  {
+   "route": "BOTH",
+   "n": 9,
+   "router": "4016",
+   "sql": "4391",
+   "rag": "177",
+   "synthesis": "63044",
+   "verification": "20693",
+   "ttft": "74924",
+   "total": "105387"
+  },
+  {
+   "route": "WEB",
+   "n": 2,
+   "router": "0",
+   "sql": null,
+   "rag": null,
+   "synthesis": "31692",
+   "verification": "16673",
+   "ttft": "25242",
+   "total": "48817"
+  }
+ ],
+ "throughput": [
+  {
+   "n": 250,
+   "prefill_tok_s": "128.9",
+   "gen_tok_s": "8.79",
+   "mean_prompt_tokens": "3746",
+   "mean_gen_tokens": "80"
+  }
+ ],
+ "verification_tier": [
+  {
+   "verification_tier": "llm",
+   "n": 127
+  },
+  {
+   "verification_tier": "fast",
+   "n": 122
+  },
+  {
+   "verification_tier": "",
+   "n": 113
+  }
+ ],
+ "cached_values": [
+  {
+   "cached": "",
+   "n": 303
+  },
+  {
+   "cached": "exact",
+   "n": 38
+  },
+  {
+   "cached": "coalesced",
+   "n": 21
+  }
+ ],
+ "verification_claims": [
+  {
+   "action_taken": "flagged_unverifiable",
+   "supported": false,
+   "n": 240,
+   "mean_conf": "0.991"
+  },
+  {
+   "action_taken": "passed_fast",
+   "supported": true,
+   "n": 217,
+   "mean_conf": "1.000"
+  },
+  {
+   "action_taken": "passed",
+   "supported": true,
+   "n": 217,
+   "mean_conf": "1.000"
+  },
+  {
+   "action_taken": "corrected",
+   "supported": false,
+   "n": 9,
+   "mean_conf": "0.972"
+  }
+ ],
+ "verification_runs": {
+  "runs": 441,
+  "claims": 683,
+  "unsupported_claims": 249,
+  "runs_with_unsupported": 196,
+  "runs_corrected": 28
+ },
+ "verification_by_route": [
+  {
+   "route": "BOTH",
+   "runs": 15,
+   "claims": 41,
+   "unsupported": 20
+  },
+  {
+   "route": "RAG",
+   "runs": 66,
+   "claims": 238,
+   "unsupported": 57
+  },
+  {
+   "route": "SQL",
+   "runs": 347,
+   "claims": 375,
+   "unsupported": 160
+  },
+  {
+   "route": "WEB",
+   "runs": 13,
+   "claims": 29,
+   "unsupported": 12
+  }
+ ]
+}
